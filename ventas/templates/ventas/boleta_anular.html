@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Anular boleta N° {{ boleta.numero }}{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% url 'ventas:boleta' boleta.numero %}"><i class="bi bi-arrow-left"></i>Boleta N° {{ boleta.numero }}</a>
+<div class="page-head"><div><h1 class="page-title">Anular boleta N° {{ boleta.numero }}</h1><p class="page-sub">{{ boleta.cliente.nombre_completo }} · {{ boleta.total|pesos }}. La boleta queda registrada como anulada y sus servicios vuelven a estar por cobrar.</p></div></div>
+<form method="post" novalidate class="panel max-w-3xl">{% csrf_token %}
+  <div class="panel-body">{% include "parciales/form.html" with una_columna=True %}</div>
+  <div class="panel-foot">
+    <a class="btn btn-quiet" href="{% url 'ventas:boleta' boleta.numero %}">Cancelar</a>
+    <button type="submit" class="btn btn-error">Anular boleta</button>
+  </div>
+</form>
+{% endblock %}
+{% block trazabilidad %}HU20 · RF28 · RNF08, RNF09 · CU12 · S3{% endblock %}

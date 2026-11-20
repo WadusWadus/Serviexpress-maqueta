@@ -1,0 +1,1 @@
+{% with e=o.estado %}<span class="badge badge-soft {% if e == 'Sin recepción' %}estado-info{% elif 'Recepción parcial' %}estado-alerta{% else %}estado-ok{% endif %}">{{ e }}</span>{% endwith %}

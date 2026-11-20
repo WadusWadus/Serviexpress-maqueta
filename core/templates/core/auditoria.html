@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block titulo %}Auditoría{% endblock %}
+{% block contenido %}
+<div class="page-head"><div><h1 class="page-title">Auditoría</h1><p class="page-sub">Accesos denegados, ingresos fallidos y cambios en boletas, facturas y órdenes. Este registro no se puede editar ni borrar.</p></div></div>
+<section class="panel">
+  <form method="get" class="panel-bar items-end">
+    {% for campo in form %}
+      <div class="w-full sm:w-44"><label class="field-label" for="{{ campo.id_for_label }}">{{ campo.label }}</label>{{ campo }}</div>
+    {% endfor %}
+    <button class="btn btn-quiet"><i class="bi bi-funnel"></i>Filtrar</button>
+  </form>
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Operación</th><th>Registro</th><th>Detalle</th></tr></thead>
+    <tbody>
+    {% for r in page_obj %}
+      <tr>
+        <td class="whitespace-nowrap tabular">{{ r.fecha_hora|date:"d-m-Y H:i:s" }}</td>
+        <td>{{ r.usuario.username|default:"—" }}</td>
+        <td><span class="badge badge-soft whitespace-nowrap {% if r.operacion == 'ACCESO_DENEGADO' or r.operacion == 'BLOQUEO' or r.operacion == 'ELIMINAR' or r.operacion == 'ANULAR' %}badge-error{% elif r.operacion == 'LOGIN_FALLIDO' or r.operacion == 'MODIFICAR' %}badge-warning{% else %}badge-success{% endif %}">{{ r.get_operacion_display }}</span></td>
+        <td class="whitespace-nowrap">{{ r.entidad }} {{ r.entidad_id }}</td>
+        <td class="max-w-md text-xs text-base-content/55"><span class="break-words">{{ r.detalle|default:"" }}</span></td>
+      </tr>
+    {% empty %}<tr><td colspan="5" class="empty"><i class="bi bi-journal-text"></i>No hay registros con ese filtro.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "parciales/paginacion.html" %}
+</section>
+{% endblock %}
+{% block trazabilidad %}HU02 · RNF06, RNF08 · CU02 · S1{% endblock %}

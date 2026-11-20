@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Servicios{% endblock %}
+{% block contenido %}
+<div class="page-head">
+  <div><h1 class="page-title">Servicios</h1><p class="page-sub">Lo que el taller ofrece, con su precio y los productos que usa. Los servicios activos se pueden reservar.</p></div>
+  <div class="flex flex-wrap gap-2"><a class="btn btn-primary" href="{% url 'catalogo:servicio_nuevo' %}"><i class="bi bi-plus-lg"></i>Nuevo servicio</a></div>
+</div>
+<div class="panel">
+  {% include "parciales/buscador.html" with placeholder="Buscar servicio" %}
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>Servicio</th><th>Productos que usa</th><th class="text-right">Precio</th><th>Estado</th><th></th></tr></thead>
+    <tbody>
+    {% for s in page_obj %}
+      <tr>
+        <td><a class="cell-main" href="{% url 'catalogo:servicio_detalle' s.pk %}">{{ s.nombre }}</a></td>
+        <td class="text-sm text-base-content/60">{% for l in s.lineas_producto.all %}{{ l.producto.descripcion }} ×{{ l.cantidad|cantidad }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}</td>
+        <td class="text-right font-semibold">{{ s.precio|pesos }}</td>
+        <td>{% if s.activo %}<span class="badge badge-soft badge-success">Activo</span>{% else %}<span class="badge badge-soft badge-ghost">Desactivado</span>{% endif %}</td>
+        <td class="cell-actions"><a class="btn btn-sm btn-quiet" href="{% url 'catalogo:servicio_editar' s.pk %}"><i class="bi bi-pencil"></i>Editar</a></td>
+      </tr>
+    {% empty %}<tr><td colspan="5" class="empty"><i class="bi bi-wrench-adjustable"></i>No hay servicios.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "parciales/paginacion.html" %}
+</div>
+{% endblock %}
+{% block trazabilidad %}HU12 · RF15, RF16 · CU07 · S2{% endblock %}

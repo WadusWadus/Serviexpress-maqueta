@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block titulo %}Desactivar{% endblock %}
+{% block contenido %}
+{% url volver as volver_url %}
+{% include "parciales/confirmar.html" with titulo="Desactivar «"|add:objeto_nombre|add:"»" texto=aviso boton="Desactivar" peligro=True %}
+{% endblock %}
+{% block trazabilidad %}{{ traza }}{% endblock %}

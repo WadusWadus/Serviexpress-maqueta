@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block titulo %}Estadísticas web{% endblock %}
+{% block contenido %}
+<div class="page-head"><div><h1 class="page-title">Visitas al sitio web</h1><p class="page-sub">Visitas a la página pública y a las pantallas de reserva. Cada visitante cuenta una vez por página al día.</p></div></div>
+<section class="panel">
+  <div role="tablist" class="tabs tabs-border px-4 pt-2">
+    {% for clave, titulo, datos in series %}
+      <input type="radio" name="periodo" role="tab" class="tab font-medium" aria-label="{{ titulo }}" id="tab-{{ clave }}" {% if forloop.first %}checked{% endif %}>
+      <div role="tabpanel" class="tab-content border-t border-base-300 -mx-4 px-4">
+        <div class="py-6"><div class="relative h-72"><canvas id="grafico-{{ clave }}" aria-label="Gráfico de visitas {{ titulo|lower }}" role="img"></canvas></div></div>
+        <details class="border-t border-base-300 py-4">
+          <summary class="cursor-pointer text-sm font-medium text-base-content/70">Ver tabla</summary>
+          <div class="mt-3 overflow-x-auto">
+            <table class="table data-table" id="tabla-{{ clave }}">
+              <thead><tr><th>Período</th><th class="text-right">Visitas</th></tr></thead>
+              <tbody>{% for etiqueta, valor in datos %}<tr><td>{{ etiqueta }}</td><td class="text-right tabular">{{ valor }}</td></tr>{% endfor %}</tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{{ graficos|json_script:"datos-graficos" }}
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+        integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
+<script>
+(function () {
+  const datos = JSON.parse(document.getElementById("datos-graficos").textContent);
+  const fuente = { family: "Geist", size: 11 };
+  Object.entries(datos).forEach(([clave, serie]) => {
+    new Chart(document.getElementById("grafico-" + clave), {
+      type: "bar",
+      data: { labels: serie.etiquetas, datasets: [{ label: "Visitas", data: serie.valores, backgroundColor: "#8f00ff", borderRadius: 5, maxBarThickness: 30 }] },
+      options: { maintainAspectRatio: false, plugins: { legend: { display: false } },
+                 scales: { x: { grid: { display: false }, border: { display: false }, ticks: { color: "#8a8c94", font: fuente, maxRotation: 0, autoSkip: true } },
+                           y: { beginAtZero: true, border: { display: false }, grid: { color: "#eeeef2" }, ticks: { precision: 0, color: "#8a8c94", font: fuente } } } },
+    });
+  });
+})();
+</script>
+{% endblock %}
+{% block trazabilidad %}HU24 · RF33 · CU16 · S6{% endblock %}

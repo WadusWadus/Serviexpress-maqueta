@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Boletas{% endblock %}
+{% block contenido %}
+<div class="page-head">
+  <div><h1 class="page-title">Boletas</h1><p class="page-sub">Comprobantes de los servicios cobrados. Una boleta no se borra: se anula indicando el motivo.</p></div>
+  <div class="flex flex-wrap gap-2"><a class="btn btn-primary" href="{% url 'ventas:boleta_nueva' %}"><i class="bi bi-plus-lg"></i>Nueva boleta</a></div>
+</div>
+<div class="panel">
+  <form method="get" class="panel-bar">
+    <input type="number" name="numero" value="{{ numero }}" class="input w-24" placeholder="N°" aria-label="Número">
+    <label class="input w-full sm:w-64"><i class="bi bi-search text-base-content/40"></i><input type="search" name="cliente" value="{{ cliente }}" class="grow" placeholder="Cliente" aria-label="Cliente"></label>
+    <select name="estado" class="select w-full sm:w-48" aria-label="Estado"><option value="">Todos los estados</option>
+      {% for v, e in estados %}<option value="{{ v }}" {% if v == estado %}selected{% endif %}>{{ e }}</option>{% endfor %}</select>
+    <button class="btn btn-quiet"><i class="bi bi-funnel"></i>Filtrar</button>
+  </form>
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>N°</th><th>Cliente</th><th>Emitida</th><th class="text-right">Total</th><th>Estado</th></tr></thead>
+    <tbody>
+    {% for b in page_obj %}
+      <tr><td><a class="font-bold" href="{% url 'ventas:boleta' b.numero %}">{{ b.numero }}</a></td>
+        <td>{{ b.cliente.nombre_completo }}</td><td class="whitespace-nowrap text-base-content/60">{{ b.fecha_emision|date:"d-m-Y H:i" }}</td>
+        <td class="text-right font-semibold">{{ b.total|pesos }}</td><td>{% include "ventas/_estado_boleta.html" %}</td></tr>
+    {% empty %}<tr><td colspan="5" class="empty"><i class="bi bi-receipt"></i>No hay boletas con ese filtro.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "parciales/paginacion.html" %}
+</div>
+{% endblock %}
+{% block trazabilidad %}HU19, HU20 · RF26–RF28 · CU12 · S3{% endblock %}

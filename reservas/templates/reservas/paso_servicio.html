@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Reservar hora{% endblock %}
+{% block contenido %}
+<div class="page-head"><div><h1 class="page-title">Reservar hora</h1><p class="page-sub">Elija el servicio que necesita. El precio es el valor final.</p></div></div>
+{% include "reservas/_pasos.html" %}
+<form method="post">{% csrf_token %}
+  <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    {% for s in servicios %}
+      <label class="option-card">
+        <input type="radio" name="servicio" value="{{ s.pk }}" class="radio radio-primary radio-sm absolute right-5 top-5" {% if s.pk == elegido %}checked{% endif %} required>
+        <span class="pr-8 text-base font-semibold">{{ s.nombre }}</span>
+        <span class="mt-1 text-sm text-base-content/60">{{ s.descripcion }}</span>
+        <span class="mt-auto pt-5 text-xl font-semibold tracking-tight tabular">{{ s.precio|pesos }}</span>
+      </label>
+    {% empty %}
+      <div class="panel empty sm:col-span-2 xl:col-span-3"><i class="bi bi-wrench-adjustable"></i>No hay servicios disponibles para reservar.</div>
+    {% endfor %}
+  </div>
+  <div class="mt-8 flex justify-end">
+    <button type="submit" class="btn btn-primary btn-lg">Continuar<i class="bi bi-arrow-right"></i></button>
+  </div>
+</form>
+{% endblock %}
+{% block trazabilidad %}HU08 · RF10, RF11 · RNF18, RNF19 · CU04 · S2{% endblock %}

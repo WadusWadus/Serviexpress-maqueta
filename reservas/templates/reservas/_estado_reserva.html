@@ -1,0 +1,1 @@
+{% if r.estado == "ATENDIDA" %}<span class="badge badge-soft badge-success">Atendida</span>{% elif r.estado == "ANULADA" %}<span class="badge badge-soft badge-error">Anulada</span>{% elif r.modificable %}<span class="badge badge-soft badge-primary">Confirmada</span>{% else %}<span class="badge badge-soft badge-ghost">Vencida</span>{% endif %}

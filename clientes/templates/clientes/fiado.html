@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Habilitar fiado{% endblock %}
+{% block contenido %}
+<div class="page-head"><div><h1 class="page-title">Fiado</h1><p class="page-sub">Clientes que pueden llevarse el servicio y pagar después, con el saldo que deben.</p></div></div>
+<section class="panel">
+  {% include "parciales/buscador.html" with placeholder="Buscar por RUT, nombre o apellido" %}
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>Cliente</th><th>Habilitado para fiado</th><th class="text-right">Saldo</th></tr></thead>
+    <tbody>
+    {% for c in page_obj %}
+      <tr>
+        <td><a class="cell-main hover:text-primary" href="{% url 'clientes:ficha' c.pk %}">{{ c.nombre_completo }}</a><span class="cell-sub">RUT {{ c.rut }}</span></td>
+        <td><form method="post" action="{% url 'clientes:fiado_cambiar' c.pk %}">{% csrf_token %}
+          <input type="hidden" name="volver" value="{{ request.get_full_path }}">
+          <label class="flex cursor-pointer items-center gap-3">
+            <input class="toggle toggle-primary toggle-sm" type="checkbox" id="fiado-{{ c.pk }}" {% if c.fiado_habilitado %}checked{% endif %} onchange="this.form.submit()">
+            <span class="text-sm">{% if c.fiado_habilitado %}Sí{% else %}No{% endif %}</span>
+          </label>
+          <noscript><button class="btn btn-quiet btn-xs">Cambiar</button></noscript>
+        </form></td>
+        <td class="text-right font-medium tabular">{% if c.fiado_habilitado or c.saldo %}<a class="hover:text-primary" href="{% url 'clientes:saldo' c.pk %}">{{ c.saldo|pesos }}</a>{% else %}<span class="text-base-content/40">—</span>{% endif %}</td>
+      </tr>
+    {% empty %}<tr><td colspan="3" class="empty"><i class="bi bi-wallet2"></i>No hay clientes.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "parciales/paginacion.html" %}
+</section>
+{% if demo %}<p class="mt-4 text-xs text-base-content/50">Monto máximo de fiado: pregunta abierta V01 (sin tope). La cobranza está fuera del alcance.</p>{% endif %}
+{% endblock %}
+{% block trazabilidad %}HU06, HU07 · RF07, RF09 · CU14 · S5{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% url 'catalogo:productos' %}"><i class="bi bi-arrow-left"></i>Productos</a>
+<div class="page-head"><div><h1 class="page-title">{{ titulo }}</h1><p class="page-sub">El código no se repite y se guarda en mayúsculas.</p></div></div>
+<form method="post" novalidate class="panel max-w-3xl">{% csrf_token %}
+  <div class="panel-body">{% include "parciales/form.html" %}</div>
+  <div class="panel-foot">
+    <a class="btn btn-quiet" href="{% url 'catalogo:productos' %}">Cancelar</a>
+    <button type="submit" class="btn btn-primary">Guardar producto</button>
+  </div>
+</form>
+{% endblock %}
+{% block trazabilidad %}HU13 · RF17 · CU08 · S2{% endblock %}

@@ -1,0 +1,12 @@
+{% comment %}Confirmación. Variables: titulo, texto, boton, volver_url, peligro.{% endcomment %}
+<a class="back-link" href="{{ volver_url }}"><i class="bi bi-arrow-left"></i>Volver</a>
+<div class="panel max-w-lg">
+  <div class="panel-body">
+    <h1 class="text-xl font-semibold">{{ titulo }}</h1>
+    <p class="mt-2 text-sm text-base-content/65">{{ texto }}</p>
+  </div>
+  <form method="post" class="panel-foot">{% csrf_token %}
+    <a class="btn btn-quiet" href="{{ volver_url }}">Cancelar</a>
+    <button type="submit" class="btn {% if peligro %}btn-error{% else %}btn-primary{% endif %}">{{ boton }}</button>
+  </form>
+</div>

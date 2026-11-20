@@ -1,0 +1,17 @@
+<div class="page-head"><div><h1 class="page-title">Manual de uso</h1><p class="page-sub">Pasos para cada parte del sistema. Desde cualquier pantalla, el botón «Ayuda» abre la sección que corresponde.</p></div></div>
+<div class="grid gap-6 md:grid-cols-12">
+  <nav class="md:col-span-4" aria-label="Secciones del manual">
+    <ul class="menu panel w-full md:sticky md:top-24">
+      {% for s in secciones %}<li><a href="#seccion-{{ s.modulo }}">{{ s.titulo }}</a></li>{% endfor %}
+    </ul>
+  </nav>
+  <div class="space-y-4 md:col-span-8">
+    {% for s in secciones %}
+      <section id="seccion-{{ s.modulo }}" class="panel scroll-mt-24 p-6">
+        <h2 class="text-lg font-semibold">{{ s.titulo }}</h2>
+        <div class="mt-3 text-sm leading-relaxed text-base-content/70 [&_p]:mb-3">{{ s.contenido|linebreaks }}</div>
+      </section>
+    {% empty %}<p class="text-base-content/60">El manual todavía no tiene secciones.</p>
+    {% endfor %}
+  </div>
+</div>

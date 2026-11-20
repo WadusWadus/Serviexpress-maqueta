@@ -1,0 +1,9 @@
+<ul class="steps steps-horizontal mb-8 w-full max-w-xl text-xs font-medium" aria-label="Avance de la reserva">
+  {% with base=es_local|yesno:"1,0" %}
+  {% if es_local %}<li class="step {% if paso >= 1 %}step-primary{% endif %}">Cliente</li>{% endif %}
+  <li class="step {% if paso >= 1|add:base %}step-primary{% endif %}">Servicio</li>
+  <li class="step {% if paso >= 2|add:base %}step-primary{% endif %}">Fecha y hora</li>
+  <li class="step {% if paso >= 3|add:base %}step-primary{% endif %}">Confirmación</li>
+  {% endwith %}
+</ul>
+{% if es_local and cliente %}<p class="-mt-4 mb-6 text-sm text-base-content/60"><i class="bi bi-person"></i> Reservando para <strong class="text-base-content">{{ cliente.nombre_completo }}</strong> · RUT {{ cliente.rut }}</p>{% endif %}

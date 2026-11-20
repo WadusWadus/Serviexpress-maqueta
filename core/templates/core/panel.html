@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Inicio{% endblock %}
+{% block contenido %}
+<div class="page-head">
+  <div>
+    <p class="text-sm font-medium text-base-content/50">{% now "l j \d\e F" %}</p>
+    <h1 class="page-title mt-1">{{ saludo }}, {{ user.first_name|default:user.username }}</h1>
+  </div>
+  <div class="flex flex-wrap gap-2">
+    {% if tipo_panel == "personal" %}
+      <a class="btn btn-quiet" href="{% url 'agenda:nueva' %}"><i class="bi bi-calendar-plus"></i>Nueva reserva</a>
+      <a class="btn btn-primary" href="{% url 'ventas:boleta_nueva' %}"><i class="bi bi-receipt"></i>Emitir boleta</a>
+    {% elif tipo_panel == "mecanico" %}
+      <a class="btn btn-primary" href="{% url 'atencion:registrar' %}"><i class="bi bi-clipboard-check"></i>Cliente sin reserva</a>
+    {% elif tipo_panel == "cliente" %}
+      <a class="btn btn-primary" href="{% url 'reservas:paso_servicio' %}"><i class="bi bi-calendar-plus"></i>Reservar hora</a>
+    {% endif %}
+  </div>
+</div>
+
+{% if indicadores %}
+<div class="kpis">
+  {% for i in indicadores %}
+    <a class="kpi" href="{% url i.url %}">
+      <div class="kpi-top"><span class="kpi-label">{{ i.nombre }}</span><span class="kpi-icon"><i class="bi bi-{{ i.icono }}"></i></span></div>
+      <div class="kpi-value">{% if i.formato == "pesos" %}{{ i.valor|pesos }}{% else %}{{ i.valor }}{% endif %}</div>
+    </a>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if tipo_panel == "personal" %}
+<div class="grid gap-4 xl:grid-cols-12">
+  <section class="panel xl:col-span-7">
+    <div class="panel-head"><h2 class="panel-title">Agenda de hoy</h2><a class="panel-link" href="{% url 'agenda:lista' %}">Ver agenda</a></div>
+    {% include "core/_agenda_hoy.html" %}
+  </section>
+  <section class="panel xl:col-span-5">
+    <div class="panel-head"><h2 class="panel-title">Ventas de los últimos 14 días</h2></div>
+    <div class="panel-body"><div class="relative h-60"><canvas id="grafico-ventas" role="img" aria-label="Ventas diarias de los últimos 14 días"></canvas></div></div>
+  </section>
+  <section class="panel xl:col-span-12">
+    <div class="panel-head"><h2 class="panel-title">Últimas boletas</h2><a class="panel-link" href="{% url 'ventas:boletas' %}">Ver todas</a></div>
+    <div class="overflow-x-auto">
+      <table class="table data-table">
+        <thead><tr><th>N°</th><th>Cliente</th><th>Emitida</th><th class="text-right">Total</th><th>Estado</th></tr></thead>
+        <tbody>
+        {% for b in ultimas_boletas %}
+          <tr><td><a class="font-semibold text-primary" href="{% url 'ventas:boleta' b.numero %}">{{ b.numero }}</a></td><td class="cell-main">{{ b.cliente.nombre_completo }}</td>
+            <td class="text-base-content/60">{{ b.fecha_emision|date:"d-m-Y H:i" }}</td><td class="text-right font-medium">{{ b.total|pesos }}</td>
+            <td>{% include "ventas/_estado_boleta.html" %}</td></tr>
+        {% empty %}<tr><td colspan="5" class="empty"><i class="bi bi-receipt"></i>Aún no se emiten boletas.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+{% elif tipo_panel == "mecanico" %}
+<div class="grid gap-4 xl:grid-cols-12">
+  <section class="panel xl:col-span-7">
+    <div class="panel-head"><h2 class="panel-title">Por atender hoy</h2></div>
+    {% include "core/_agenda_hoy.html" with para_mecanico=True %}
+  </section>
+  <section class="panel xl:col-span-5">
+    <div class="panel-head"><h2 class="panel-title">Registrados por usted hoy</h2><a class="panel-link" href="{% url 'atencion:realizados' %}">Ver todos</a></div>
+    <ul class="rows">
+      {% for s in realizados %}<li><span class="row-time">{{ s.registrado_en|time:"H:i" }}</span><div class="row-main"><span class="row-title">{{ s.servicio.nombre }}</span><span class="row-sub">{{ s.cliente.nombre_completo }}</span></div><span class="badge badge-soft badge-success">Registrado</span></li>
+      {% empty %}<li class="empty block border-0"><i class="bi bi-clipboard"></i>Todavía no registra servicios hoy.</li>{% endfor %}
+    </ul>
+  </section>
+</div>
+
+{% elif tipo_panel == "cliente" %}
+<div class="grid gap-4 lg:grid-cols-12">
+  <div class="space-y-4 lg:col-span-7">
+    {% if proxima %}
+      <section class="relative overflow-hidden rounded-box bg-carbon p-7 text-white">
+        <div class="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-violeta/30 blur-3xl"></div>
+        <div class="relative">
+          <p class="text-sm font-medium text-white/60">Su próxima hora</p>
+          <p class="mt-2 text-3xl font-semibold capitalize tracking-tight">{{ proxima.fecha|date:"l j \d\e F" }}</p>
+          <p class="mt-1 text-xl font-medium text-violeta-claro">{{ proxima.hora_inicio|time:"H:i" }} hrs.</p>
+          <p class="mt-4 text-sm text-white/70">{{ proxima.servicio.nombre }} · {{ proxima.servicio.precio|pesos }} · Reserva N° {{ proxima.numero }}</p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            <a class="btn btn-sm border-white/20 bg-white/5 text-white shadow-none hover:bg-white hover:text-carbon" href="{% url 'reservas:cambiar' proxima.numero %}"><i class="bi bi-arrow-repeat"></i>Cambiar hora</a>
+            <a class="btn btn-sm border-white/20 bg-white/5 text-white shadow-none hover:bg-white hover:text-carbon" href="{% url 'reservas:anular' proxima.numero %}"><i class="bi bi-x-circle"></i>Anular</a>
+          </div>
+        </div>
+      </section>
+      {% if otras %}
+        <section class="panel">
+          <div class="panel-head"><h2 class="panel-title">Otras reservas</h2><a class="panel-link" href="{% url 'reservas:mis_reservas' %}">Ver todas</a></div>
+          <ul class="rows">{% for r in otras %}<li><span class="row-time">{{ r.hora_inicio|time:"H:i" }}</span><div class="row-main"><span class="row-title">{{ r.servicio.nombre }}</span><span class="row-sub">{{ r.fecha|date:"l j \d\e F" }}</span></div><span class="badge badge-soft badge-primary">Confirmada</span></li>{% endfor %}</ul>
+        </section>
+      {% endif %}
+    {% else %}
+      <section class="panel px-6 py-14 text-center">
+        <span class="kpi-icon mx-auto size-12 text-xl"><i class="bi bi-calendar-plus"></i></span>
+        <h2 class="mt-4 text-lg font-semibold">No tiene horas reservadas</h2>
+        <p class="mt-1 text-sm text-base-content/60">Elija el servicio y una hora libre; toma menos de un minuto.</p>
+        <a class="btn btn-primary mt-6" href="{% url 'reservas:paso_servicio' %}">Reservar hora</a>
+      </section>
+    {% endif %}
+  </div>
+  <div class="space-y-4 lg:col-span-5">
+    {% if cliente.fiado_habilitado %}
+      <div class="kpi"><div class="kpi-top"><span class="kpi-label">Saldo por pagar en el taller</span><span class="kpi-icon"><i class="bi bi-wallet2"></i></span></div>
+        <div class="kpi-value">{{ cliente.saldo_fiado|pesos }}</div></div>
+    {% endif %}
+    <section class="panel">
+      <div class="panel-head"><h2 class="panel-title">Últimas atenciones</h2></div>
+      <ul class="rows">
+        {% for s in atenciones %}<li><span class="row-time text-sm">{{ s.fecha|date:"j M" }}</span><div class="row-main"><span class="row-title">{{ s.servicio.nombre }}</span><span class="row-sub">Atendido por {{ s.empleado.nombres }}</span></div><span class="text-sm font-medium tabular">{{ s.servicio.precio|pesos }}</span></li>
+        {% empty %}<li class="empty block border-0"><i class="bi bi-tools"></i>Aquí verá los servicios que le realice el taller.</li>{% endfor %}
+      </ul>
+    </section>
+  </div>
+</div>
+{% endif %}
+
+{% if tipo_panel != "cliente" %}
+<h2 class="mt-10 mb-4 text-sm font-semibold text-base-content/60">Accesos rápidos</h2>
+<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" id="accesos-directos">
+  {% for grupo in menu %}{% for e in grupo.entradas %}{% if e.modulo != "ayuda" %}
+    <a class="panel flex items-center gap-3 px-4 py-3.5 text-sm font-medium transition hover:border-violeta/40" href="{{ e.href }}"><i class="bi bi-{{ e.icono }} text-base text-violeta"></i>{{ e.etiqueta }}</a>
+  {% endif %}{% endfor %}{% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+{% if grafico %}
+{{ grafico|json_script:"datos-ventas" }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+        integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
+<script>
+(function () {
+  const d = JSON.parse(document.getElementById("datos-ventas").textContent);
+  const pesos = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
+  const fuente = { family: "Geist", size: 11 };
+  new Chart(document.getElementById("grafico-ventas"), {
+    type: "bar",
+    data: { labels: d.etiquetas, datasets: [{ data: d.valores, backgroundColor: "#8f00ff", borderRadius: 6, maxBarThickness: 26 }] },
+    options: {
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => pesos.format(c.parsed.y) } } },
+      scales: {
+        x: { grid: { display: false }, border: { display: false }, ticks: { color: "#8a8c94", font: fuente, maxRotation: 0, autoSkip: true, maxTicksLimit: 7 } },
+        y: { beginAtZero: true, border: { display: false }, grid: { color: "#eeeef2" }, ticks: { color: "#8a8c94", font: fuente, maxTicksLimit: 5, padding: 6, callback: v => v >= 1000 ? "$" + Math.round(v / 1000) + " mil" : "$" + v } },
+      },
+    },
+  });
+})();
+</script>
+{% endif %}
+{% endblock %}
+{% block trazabilidad %}Panel · RF03 · S0{% endblock %}

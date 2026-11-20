@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% if cliente %}{% url 'clientes:ficha' cliente.pk %}{% else %}{% url 'clientes:lista' %}{% endif %}"><i class="bi bi-arrow-left"></i>{% if cliente %}Ficha{% else %}Clientes{% endif %}</a>
+<div class="page-head"><div><h1 class="page-title">{{ titulo }}</h1>{% if not cliente %}<p class="page-sub">Se crea la ficha y la cuenta con que el cliente reservará por Internet.</p>{% endif %}</div></div>
+<form method="post" novalidate class="panel max-w-3xl">{% csrf_token %}
+  <div class="panel-body">{% include "parciales/form.html" %}</div>
+  <div class="panel-foot">
+    <a class="btn btn-quiet" href="{% if cliente %}{% url 'clientes:ficha' cliente.pk %}{% else %}{% url 'clientes:lista' %}{% endif %}">Cancelar</a>
+    <button type="submit" class="btn btn-primary">{% if cliente %}Guardar cambios{% else %}Registrar cliente{% endif %}</button>
+  </div>
+</form>
+{% endblock %}
+{% block trazabilidad %}{{ traza }}{% endblock %}

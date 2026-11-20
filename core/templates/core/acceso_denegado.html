@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block titulo %}Acceso denegado{% endblock %}
+{% block contenido %}
+<section class="panel mx-auto max-w-lg px-8 py-12 text-center">
+  <span class="mx-auto inline-grid size-14 place-items-center rounded-full bg-error/10 text-2xl text-error"><i class="bi bi-shield-lock"></i></span>
+  <h1 class="mt-5 text-xl font-semibold">Acceso denegado</h1>
+  <p class="mt-2 text-sm text-base-content/65">{{ motivo|default:"No tiene permiso para entrar a este módulo." }}</p>
+  <p class="mt-1 text-xs text-base-content/50">El intento quedó registrado. Si necesita este acceso, pídalo al administrador.</p>
+  <a class="btn btn-primary mt-7" href="{% url 'core:panel' %}">Volver al inicio</a>
+</section>
+{% endblock %}
+{% block trazabilidad %}RF03 · RNF06 · Acceso denegado{% endblock %}

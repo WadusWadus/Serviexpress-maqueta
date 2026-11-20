@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Reservar hora · fecha y hora{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% if cambiar %}{% url modo.volver %}{% else %}{% url ns|add:':paso_servicio' %}{% endif %}"><i class="bi bi-arrow-left"></i>{% if cambiar %}Volver{% else %}Cambiar servicio{% endif %}</a>
+<div class="page-head">
+  <div>
+    <h1 class="page-title">{% if cambiar %}Cambiar la reserva N° {{ cambiar.numero }}{% else %}Elija fecha y hora{% endif %}</h1>
+    <p class="page-sub">{{ servicio.nombre }} · {{ servicio.precio|pesos }}{% if cambiar %} · hora actual: {{ cambiar.fecha|date:"l j \d\e F" }}, {{ cambiar.hora_inicio|time:"H:i" }}{% endif %}</p>
+  </div>
+</div>
+{% if not cambiar %}{% include "reservas/_pasos.html" %}{% endif %}
+<section class="panel">
+  <div class="panel-head"><h2 class="panel-title">Fecha</h2><button type="button" class="panel-link inline-flex items-center gap-1.5" onclick="document.getElementById('aviso-feriados').showModal()"><i class="bi bi-info-circle"></i>Sobre los feriados</button></div>
+  <div class="overflow-x-auto px-6 py-5">
+    <div class="flex gap-2" id="fechas-ofrecidas">
+      {% for f in fechas %}
+        <a href="?fecha={{ f|date:'Y-m-d' }}" class="day-chip {% if f == fecha_vista %}is-active{% endif %}" {% if f == fecha_vista %}aria-current="date"{% endif %}>
+          <span class="text-xs font-medium capitalize opacity-70">{{ f|date:"D" }}</span>
+          <span class="text-xl font-semibold leading-tight tabular">{{ f|date:"j" }}</span>
+          <span class="text-xs capitalize opacity-70">{{ f|date:"M" }}</span>
+        </a>
+      {% empty %}
+        <p class="text-sm text-base-content/60">No hay fechas con horas libres en los próximos días.</p>
+      {% endfor %}
+    </div>
+  </div>
+  {% if fecha_vista %}
+  <div class="panel-head border-t"><h2 class="panel-title">Horas libres el {{ fecha_vista|date:"l j \d\e F" }}</h2></div>
+  <form method="post" class="panel-body">{% csrf_token %}
+    <input type="hidden" name="fecha" value="{{ fecha_vista|date:'Y-m-d' }}">
+    <div class="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-8" id="horas-libres">
+      {% for h in horas %}
+        <button type="submit" name="hora" value="{{ h|time:'H:i' }}" class="btn btn-quiet time-chip">{{ h|time:"H:i" }}</button>
+      {% empty %}
+        <p class="col-span-full text-sm text-base-content/60">No quedan horas libres en esta fecha. Elija otra.</p>
+      {% endfor %}
+    </div>
+  </form>
+  {% endif %}
+</section>
+{% include "parciales/aviso_feriados.html" %}
+{% endblock %}
+{% block trazabilidad %}{% if cambiar %}HU10 · RF13{% else %}HU08 · RF10, RF11 · RNF18, RNF19{% endif %} · CU04 · S2{% endblock %}

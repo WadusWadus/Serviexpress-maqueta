@@ -1,0 +1,14 @@
+<ul class="rows">
+  {% for r in agenda %}
+    <li>
+      <span class="row-time">{{ r.hora_inicio|time:"H:i" }}</span>
+      <div class="row-main"><span class="row-title">{{ r.cliente.nombre_completo }}</span><span class="row-sub">{{ r.servicio.nombre }}{% if r.canal == "LOCAL" %} · reservada en el local{% endif %}</span></div>
+      {% if para_mecanico %}
+        <a class="btn btn-primary btn-sm" href="{% url 'atencion:registrar' %}?reserva={{ r.numero }}">Registrar</a>
+      {% elif r.estado == "ATENDIDA" %}<span class="badge badge-soft badge-success">Atendida</span>
+      {% else %}<span class="badge badge-soft badge-primary">Pendiente</span>{% endif %}
+    </li>
+  {% empty %}
+    <li class="empty block border-0"><i class="bi bi-calendar-check"></i>No hay reservas para hoy.</li>
+  {% endfor %}
+</ul>

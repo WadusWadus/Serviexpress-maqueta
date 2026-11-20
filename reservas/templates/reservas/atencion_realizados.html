@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}Servicios realizados{% endblock %}
+{% block contenido %}
+<div class="page-head"><div><h1 class="page-title">Servicios realizados</h1><p class="page-sub">{{ fecha|date:"l j \d\e F" }}. Los pendientes se cobran con boleta o factura.</p></div></div>
+<div class="panel">
+  <form method="get" class="panel-bar flex gap-2 flex-wrap">
+    <div class="w-48">{{ form.fecha }}</div><button class="btn btn-quiet">Ver día</button>
+  </form>
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>Servicio</th><th>Cliente</th><th>Mecánico</th><th>Origen</th><th>Cobro</th></tr></thead>
+    <tbody>
+    {% for s in page_obj %}
+      <tr><td><span class="cell-main">{{ s.servicio.nombre }}</span>{% if s.observacion %}<span class="cell-sub">{{ s.observacion }}</span>{% endif %}</td>
+        <td>{{ s.cliente.nombre_completo }}</td><td>{{ s.empleado.nombre_completo }}</td>
+        <td class="text-base-content/60">{% if s.reserva %}Reserva N° {{ s.reserva.numero }}{% else %}Sin reserva{% endif %}</td>
+        <td>{% if s.estado_documento == "PENDIENTE" %}<span class="badge badge-soft badge-warning">Por cobrar</span>{% else %}<span class="badge badge-soft badge-success">Cobrado</span>{% endif %}</td></tr>
+    {% empty %}<tr><td colspan="5" class="empty"><i class="bi bi-clipboard"></i>No hay servicios registrados en esta fecha.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "parciales/paginacion.html" %}
+</div>
+{% endblock %}
+{% block trazabilidad %}HU11 · RF14 · CU06 · S3{% endblock %}

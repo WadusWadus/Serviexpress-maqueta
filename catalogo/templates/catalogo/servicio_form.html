@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% if servicio %}{% url 'catalogo:servicio_detalle' servicio.pk %}{% else %}{% url 'catalogo:servicios' %}{% endif %}"><i class="bi bi-arrow-left"></i>{% if servicio %}{{ servicio }}{% else %}Servicios{% endif %}</a>
+<div class="page-head"><div><h1 class="page-title">{{ titulo }}</h1></div></div>
+<form method="post" novalidate class="panel max-w-3xl">{% csrf_token %}
+  <div class="panel-body">{% include "parciales/form.html" %}</div>
+  <div class="panel-head border-t border-base-300"><h2 class="panel-title">Productos que usa</h2><span class="text-base-content/60 text-sm">Deje en blanco las filas que no use</span></div>
+  <div class="panel-body">
+    {{ formset.management_form }}
+    {% if formset.non_form_errors %}<div class="alert alert-soft alert-error"><i class="bi bi-x-circle"></i><div>{% for e in formset.non_form_errors %}<div>{{ e }}</div>{% endfor %}</div></div>{% endif %}
+    {% for f in formset %}
+      <div class="grid grid-cols-12 gap-2 items-end mb-4">
+        {% for h in f.hidden_fields %}{{ h }}{% endfor %}
+        <div class="col-span-12 sm:col-span-7"><label class="field-label" for="{{ f.producto.id_for_label }}">Producto</label>{{ f.producto }}</div>
+        <div class="col-span-7 sm:col-span-3"><label class="field-label" for="{{ f.cantidad.id_for_label }}">Cantidad</label>{{ f.cantidad }}</div>
+        <div class="col-span-5 sm:col-span-2 pb-2">{% if f.instance.pk %}<div class="flex items-center gap-2">{{ f.DELETE }} <label class="text-sm" for="{{ f.DELETE.id_for_label }}">Quitar</label></div>{% endif %}</div>
+        {% for e in f.non_field_errors %}<div class="col-span-12 field-error">{{ e }}</div>{% endfor %}
+        {% for campo in f.visible_fields %}{% for e in campo.errors %}<div class="col-span-12 field-error">{{ campo.label }}: {{ e }}</div>{% endfor %}{% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="panel-foot">
+    <a class="btn btn-quiet" href="{% if servicio %}{% url 'catalogo:servicio_detalle' servicio.pk %}{% else %}{% url 'catalogo:servicios' %}{% endif %}">Cancelar</a>
+    <button type="submit" class="btn btn-primary">Guardar servicio</button>
+  </div>
+</form>
+{% endblock %}
+{% block trazabilidad %}HU12 · RF15, RF16 · CU07 · S2{% endblock %}

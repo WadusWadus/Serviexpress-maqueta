@@ -1,0 +1,8 @@
+<form method="get" class="panel-bar" role="search">
+  <label class="input w-full sm:max-w-sm">
+    <i class="bi bi-search text-base-content/40"></i>
+    <input type="search" name="q" value="{{ q }}" class="grow" placeholder="{{ placeholder }}" aria-label="{{ placeholder }}">
+  </label>
+  <button class="btn btn-quiet">Buscar</button>
+  {% if q %}<a class="btn btn-ghost" href="?">Limpiar</a>{% endif %}
+</form>

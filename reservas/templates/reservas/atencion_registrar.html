@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}Registrar servicio{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% url 'atencion:inicio' %}"><i class="bi bi-arrow-left"></i>Reservas de hoy</a>
+<div class="page-head"><div><h1 class="page-title">Registrar servicio realizado</h1><p class="page-sub">{% if reserva %}Se registra a su nombre con la fecha de hoy.{% else %}Cliente sin reserva: ingrese su RUT y el servicio realizado.{% endif %}</p></div></div>
+<form method="post" novalidate class="panel max-w-3xl">{% csrf_token %}
+  {% if reserva %}
+  <div class="panel-body border-b border-base-300">
+    <dl class="facts">
+      <dt>Reserva</dt><dd>N° {{ reserva.numero }} · {{ reserva.hora_inicio|time:"H:i" }}</dd>
+      <dt>Cliente</dt><dd>{{ reserva.cliente.nombre_completo }} <span class="text-base-content/60 font-normal">· {{ reserva.cliente.rut }}</span></dd>
+      <dt>Servicio</dt><dd>{{ reserva.servicio.nombre }}</dd>
+    </dl>
+  </div>
+  {% endif %}
+  <div class="panel-body">
+    <p class="text-sm text-base-content/60 mb-4"><i class="bi bi-person-badge"></i> Mecánico: <strong class="text-base-content">{{ empleado.nombre_completo }}</strong> · {% now "d-m-Y" %}</p>
+    {% include "parciales/form.html" %}
+  </div>
+  <div class="panel-foot">
+    <a class="btn btn-quiet" href="{% url 'atencion:inicio' %}">Cancelar</a>
+    <button type="submit" class="btn btn-primary"><i class="bi bi-check2-circle"></i>Registrar servicio</button>
+  </div>
+</form>
+{% endblock %}
+{% block trazabilidad %}HU11 · RF14 · CU06 · S3{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block titulo %}Reservar en el local{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% url 'agenda:lista' %}"><i class="bi bi-arrow-left"></i>Agenda</a>
+<div class="page-head"><div><h1 class="page-title">Reservar en el local</h1><p class="page-sub">Busque al cliente para tomar la hora a su nombre.</p></div></div>
+{% include "reservas/_pasos.html" %}
+{% include "parciales/buscar_cliente.html" with metodo="post" %}
+{% endblock %}
+{% block trazabilidad %}HU08 · RF10 · CU04 · S2{% endblock %}

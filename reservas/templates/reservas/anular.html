@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block titulo %}Anular reserva{% endblock %}
+{% block contenido %}
+{% url volver as volver_url %}
+<a class="back-link" href="{{ volver_url }}"><i class="bi bi-arrow-left"></i>Volver</a>
+<div class="panel max-w-lg">
+  <div class="panel-body">
+    <h1 class="h4">Anular la reserva N° {{ reserva.numero }}</h1>
+    <dl class="facts my-3">
+      <dt>Servicio</dt><dd>{{ reserva.servicio.nombre }}</dd>
+      <dt>Fecha</dt><dd>{{ reserva.fecha|date:"l j \d\e F" }}, {{ reserva.hora_inicio|time:"H:i" }}</dd>
+      <dt>Cliente</dt><dd>{{ reserva.cliente.nombre_completo }}</dd>
+    </dl>
+    <p class="text-base-content/60 mb-0">La hora quedará libre para otro cliente.</p>
+  </div>
+  <form method="post" class="panel-foot">{% csrf_token %}
+    <a class="btn btn-quiet" href="{{ volver_url }}">Mantener reserva</a>
+    <button type="submit" class="btn btn-error">Anular reserva</button>
+  </form>
+</div>
+{% endblock %}
+{% block trazabilidad %}HU10 · RF13 · CU04 · S2{% endblock %}

@@ -1,0 +1,8 @@
+<div class="doc-head">
+  <div class="flex items-center gap-3 font-semibold tracking-tight">{% include "parciales/marca.html" with bajada=True %}</div>
+  <div class="doc-number">
+    <p class="text-xs font-medium text-base-content/55">{{ tipo_documento }}</p>
+    <p class="text-2xl font-semibold tracking-tight tabular">N° {{ numero_documento }}</p>
+    <p class="text-xs text-base-content/55 tabular">{{ fecha_documento }}</p>
+  </div>
+</div>

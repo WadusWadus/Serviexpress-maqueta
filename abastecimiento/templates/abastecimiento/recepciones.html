@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Recepciones{% endblock %}
+{% block contenido %}
+<div class="page-head">
+  <div><h1 class="page-title">Recepciones</h1><p class="page-sub">Historial de lo recibido de cada orden de pedido.</p></div>
+  <div class="flex flex-wrap gap-2"><a class="btn btn-primary" href="{% url 'abastecimiento:recepcion_nueva' %}"><i class="bi bi-box-seam"></i>Recepcionar</a></div>
+</div>
+<div class="panel">
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>Fecha</th><th>Orden</th><th>Productos recibidos</th><th>Recibido por</th></tr></thead>
+    <tbody>
+    {% for r in page_obj %}
+      <tr><td class="whitespace-nowrap">{{ r.fecha|date:"d-m-Y H:i" }}</td>
+        <td><a class="font-bold" href="{% url 'abastecimiento:orden' r.orden.numero %}">N° {{ r.orden.numero }}</a><span class="cell-sub">{{ r.orden.proveedor }}</span></td>
+        <td class="text-sm">{% for l in r.lineas.all %}{{ l.producto.descripcion }} ×{{ l.cantidad|cantidad }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+        <td>{{ r.recibida_por.get_full_name|default:r.recibida_por.username }}</td></tr>
+    {% empty %}<tr><td colspan="4" class="empty"><i class="bi bi-boxes"></i>No hay recepciones.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "parciales/paginacion.html" %}
+</div>
+{% endblock %}
+{% block trazabilidad %}HU18 · RF24 · CU11 · S4{% endblock %}

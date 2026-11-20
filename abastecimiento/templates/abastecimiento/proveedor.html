@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block titulo %}{{ proveedor }}{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% url 'abastecimiento:proveedores' %}"><i class="bi bi-arrow-left"></i>Proveedores</a>
+<div class="page-head">
+  <div><h1 class="page-title">{{ proveedor.razon_social }}</h1><p class="page-sub">RUT {{ proveedor.rut }} · {{ proveedor.rubro }} {% if not proveedor.activo %}<span class="badge badge-soft badge-ghost ml-1">Inactivo</span>{% endif %}</p></div>
+  <div class="flex flex-wrap gap-2">
+    {% if proveedor.activo %}<a class="btn btn-quiet" href="{% url 'abastecimiento:orden_nueva' %}"><i class="bi bi-cart-check"></i>Nueva orden</a>{% endif %}
+    <a class="btn btn-primary" href="{% url 'abastecimiento:proveedor_editar' proveedor.pk %}"><i class="bi bi-pencil"></i>Editar</a>
+  </div>
+</div>
+<div class="grid grid-cols-12 gap-4">
+  <div class="col-span-12 lg:col-span-5">
+    <div class="panel"><div class="panel-head"><h2 class="panel-title">Contacto</h2></div>
+      <dl class="panel-body grid gap-5 [&_dt]:mb-1 [&_dt]:text-xs [&_dt]:font-medium [&_dt]:text-base-content/55 [&_dd]:font-medium">
+        <div><dt>Nombre</dt><dd>{{ proveedor.nombre_contacto|default:"—" }}</dd></div>
+        <div><dt>Teléfono</dt><dd>{{ proveedor.telefono|default:"—" }}</dd></div>
+        <div><dt>Correo</dt><dd>{{ proveedor.email|default:"—" }}</dd></div>
+      </dl>
+    </div>
+  </div>
+  <div class="col-span-12 lg:col-span-7">
+    <div class="panel"><div class="panel-head"><h2 class="panel-title">Últimas órdenes</h2></div>
+      <ul class="rows">
+        {% for o in ordenes %}<li><span class="row-time">N° {{ o.numero }}</span><div class="row-main"><strong>{{ o.fecha|date:"d-m-Y" }}</strong><span>{{ o.creada_por.nombre_completo }}</span></div><a class="btn btn-sm btn-quiet" href="{% url 'abastecimiento:orden' o.numero %}">Ver</a></li>
+        {% empty %}<li class="block empty"><i class="bi bi-cart"></i>Sin órdenes a este proveedor.</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block trazabilidad %}HU15 · RF19 · CU09 · S4{% endblock %}

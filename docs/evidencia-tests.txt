@@ -1,0 +1,197 @@
+Evidencia de tests · SERVIEXPRESS · 19-11-2026 20:31 · Django 5.2.19 · Python 3.13.18
+
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Found 136 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: messages, staticfiles
+  Apply all migrations: abastecimiento, admin, auth, catalogo, clientes, contenttypes, core, cuentas, informes, personal, reservas, sessions, ventas
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying cuentas.0001_initial... OK
+  Applying personal.0001_initial... OK
+  Applying catalogo.0001_initial... OK
+  Applying abastecimiento.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying reservas.0001_initial... OK
+  Applying clientes.0001_initial... OK
+  Applying clientes.0002_initial... OK
+  Applying reservas.0002_reserva... OK
+  Applying reservas.0003_serviciorealizado... OK
+  Applying ventas.0001_initial... OK
+  Applying ventas.0002_boleta_fiada... OK
+  Applying clientes.0003_cliente_fiado_habilitado_movimientofiado... OK
+  Applying core.0001_initial... OK
+  Applying core.0002_initial... OK
+  Applying core.0003_seccionayuda... OK
+  Applying informes.0001_initial... OK
+  Applying sessions.0001_initial...test_buscador_por_rubro (abastecimiento.tests.test_hu15.ProveedoresTests.test_buscador_por_rubro) ... ok
+test_proveedor_activo_aparece_en_orden (abastecimiento.tests.test_hu15.ProveedoresTests.test_proveedor_activo_aparece_en_orden) ... ok
+test_proveedor_inactivo_no_aparece (abastecimiento.tests.test_hu15.ProveedoresTests.test_proveedor_inactivo_no_aparece) ... ok
+test_rut_proveedor_duplicado_es_rechazado (abastecimiento.tests.test_hu15.ProveedoresTests.test_rut_proveedor_duplicado_es_rechazado) ... ok
+test_cantidad_cero_y_producto_repetido_son_rechazados (abastecimiento.tests.test_hu16.GenerarOrdenTests.test_cantidad_cero_y_producto_repetido_son_rechazados) ... ok
+test_creacion_orden_queda_en_log (abastecimiento.tests.test_hu16.GenerarOrdenTests.test_creacion_orden_queda_en_log) ... ok
+test_empleado_no_habilitado_no_genera_orden (abastecimiento.tests.test_hu16.GenerarOrdenTests.test_empleado_no_habilitado_no_genera_orden) ... ok
+test_intento_no_habilitado_queda_en_log (abastecimiento.tests.test_hu16.GenerarOrdenTests.test_intento_no_habilitado_queda_en_log) ... ok
+test_orden_sin_productos_es_rechazada (abastecimiento.tests.test_hu16.GenerarOrdenTests.test_orden_sin_productos_es_rechazada) ... ok
+test_ordenes_reciben_correlativo_ascendente (abastecimiento.tests.test_hu16.GenerarOrdenTests.test_ordenes_reciben_correlativo_ascendente) ... ok
+test_modificacion_y_eliminacion_quedan_en_log (abastecimiento.tests.test_hu17.ModificarEliminarOrdenTests.test_modificacion_y_eliminacion_quedan_en_log) ... ok
+test_no_habilitado_no_corrige_ordenes (abastecimiento.tests.test_hu17.ModificarEliminarOrdenTests.test_no_habilitado_no_corrige_ordenes) ... ok
+test_numero_eliminado_no_se_reutiliza (abastecimiento.tests.test_hu17.ModificarEliminarOrdenTests.test_numero_eliminado_no_se_reutiliza) ... ok
+test_orden_con_recepcion_no_se_elimina (abastecimiento.tests.test_hu17.ModificarEliminarOrdenTests.test_orden_con_recepcion_no_se_elimina) ... ok
+test_orden_con_recepcion_no_se_modifica (abastecimiento.tests.test_hu17.ModificarEliminarOrdenTests.test_orden_con_recepcion_no_se_modifica) ... ok
+test_confirmar_con_diferencias_guarda (abastecimiento.tests.test_hu18.RecepcionTests.test_confirmar_con_diferencias_guarda) ... ok
+test_diferencia_de_cantidad_pide_confirmacion (abastecimiento.tests.test_hu18.RecepcionTests.test_diferencia_de_cantidad_pide_confirmacion) ... ok
+test_orden_inexistente_avisa (abastecimiento.tests.test_hu18.RecepcionTests.test_orden_inexistente_avisa) ... ok
+test_producto_de_la_orden_agregado_por_codigo_se_suma (abastecimiento.tests.test_hu18.RecepcionTests.test_producto_de_la_orden_agregado_por_codigo_se_suma) ... ok
+test_producto_no_solicitado_es_rechazado (abastecimiento.tests.test_hu18.RecepcionTests.test_producto_no_solicitado_es_rechazado) ... ok
+test_recepcion_actualiza_pendientes (abastecimiento.tests.test_hu18.RecepcionTests.test_recepcion_actualiza_pendientes) ... ok
+test_rechazo_no_guarda_la_recepcion (abastecimiento.tests.test_hu18.RecepcionTests.test_rechazo_no_guarda_la_recepcion) ... ok
+test_cantidad_cero_es_rechazada (catalogo.tests.test_hu12.ServiciosTests.test_cantidad_cero_es_rechazada) ... ok
+test_crear_servicio_con_productos (catalogo.tests.test_hu12.ServiciosTests.test_crear_servicio_con_productos) ... ok
+test_detalle_servicio_lista_productos (catalogo.tests.test_hu12.ServiciosTests.test_detalle_servicio_lista_productos) ... ok
+test_servicio_desactivado_no_aparece_en_reserva (catalogo.tests.test_hu12.ServiciosTests.test_servicio_desactivado_no_aparece_en_reserva) ... ok
+test_codigo_duplicado_es_rechazado (catalogo.tests.test_hu13.ProductosTests.test_codigo_duplicado_es_rechazado) ... ok
+test_codigo_se_guarda_en_mayusculas (catalogo.tests.test_hu13.ProductosTests.test_codigo_se_guarda_en_mayusculas) ... ok
+test_mecanico_no_entra_al_catalogo (catalogo.tests.test_hu13.ProductosTests.test_mecanico_no_entra_al_catalogo) ... ok
+test_producto_desactivado_no_aparece_en_selecciones (catalogo.tests.test_hu13.ProductosTests.test_producto_desactivado_no_aparece_en_selecciones) ... ok
+test_cliente_nuevo_puede_ingresar (clientes.tests.test_hu04.FichaClienteTests.test_cliente_nuevo_puede_ingresar) ... ok
+test_ficha_cliente_se_guarda (clientes.tests.test_hu04.FichaClienteTests.test_ficha_cliente_se_guarda) ... ok
+test_mecanico_no_registra_clientes (clientes.tests.test_hu04.FichaClienteTests.test_mecanico_no_registra_clientes) ... ok
+test_rut_duplicado_es_rechazado (clientes.tests.test_hu04.FichaClienteTests.test_rut_duplicado_es_rechazado) ... ok
+test_rut_invalido_es_rechazado (clientes.tests.test_hu04.FichaClienteTests.test_rut_invalido_es_rechazado) ... ok
+test_edicion_concurrente_avisa_conflicto (clientes.tests.test_hu05.ModificarFichaTests.test_edicion_concurrente_avisa_conflicto) ... ok
+test_lista_clientes_pagina_de_50 (clientes.tests.test_hu05.ModificarFichaTests.test_lista_clientes_pagina_de_50) ... ok
+test_modificacion_se_ve_en_la_ficha (clientes.tests.test_hu05.ModificarFichaTests.test_modificacion_se_ve_en_la_ficha) ... ok
+test_rut_no_se_edita (clientes.tests.test_hu05.ModificarFichaTests.test_rut_no_se_edita) ... ok
+test_administrativo_no_puede_habilitar_fiado (clientes.tests.test_hu06.HabilitarFiadoTests.test_administrativo_no_puede_habilitar_fiado) ... ok
+test_solo_habilitados_tienen_opcion_fiado (clientes.tests.test_hu06.HabilitarFiadoTests.test_solo_habilitados_tienen_opcion_fiado) ... ok
+test_anular_boleta_fiada_descuenta_saldo (clientes.tests.test_hu07.VentaFiadaTests.test_anular_boleta_fiada_descuenta_saldo) ... ok
+test_boleta_fiada_suma_al_saldo (clientes.tests.test_hu07.VentaFiadaTests.test_boleta_fiada_suma_al_saldo) ... ok
+test_boleta_pagada_no_mueve_el_saldo (clientes.tests.test_hu07.VentaFiadaTests.test_boleta_pagada_no_mueve_el_saldo) ... ok
+test_fiado_a_no_habilitado_es_rechazado (clientes.tests.test_hu07.VentaFiadaTests.test_fiado_a_no_habilitado_es_rechazado) ... ok
+test_modificar_boleta_fiada_ajusta_saldo (clientes.tests.test_hu07.VentaFiadaTests.test_modificar_boleta_fiada_ajusta_saldo) ... ok
+test_cargar_demo_corre_dos_veces (core.tests.test_base.BaseComunTests.test_cargar_demo_corre_dos_veces) ... ok
+test_correlativo_no_reutiliza (core.tests.test_base.BaseComunTests.test_correlativo_no_reutiliza)
+RF22 · Los números siguen subiendo aunque se borre el último documento. ... ok
+test_registrar_auditoria (core.tests.test_base.BaseComunTests.test_registrar_auditoria) ... ok
+test_validacion_rut (core.tests.test_base.BaseComunTests.test_validacion_rut) ... ok
+test_ayuda_muestra_seccion_del_modulo_actual (core.tests.test_hu03.AyudaTests.test_ayuda_muestra_seccion_del_modulo_actual) ... ok
+test_manual_completo_es_publico (core.tests.test_hu03.AyudaTests.test_manual_completo_es_publico) ... ok
+test_modulo_sin_seccion_muestra_manual_general (core.tests.test_hu03.AyudaTests.test_modulo_sin_seccion_muestra_manual_general) ... ok
+test_bloqueo_expira_a_los_15_minutos (cuentas.tests.test_hu01.IngresoTests.test_bloqueo_expira_a_los_15_minutos) ... ok
+test_bloqueo_tras_cinco_intentos (cuentas.tests.test_hu01.IngresoTests.test_bloqueo_tras_cinco_intentos) ... ok
+test_contrasena_guardada_con_hash (cuentas.tests.test_hu01.IngresoTests.test_contrasena_guardada_con_hash) ... ok
+test_ingreso_correcto_redirige_al_panel (cuentas.tests.test_hu01.IngresoTests.test_ingreso_correcto_redirige_al_panel) ... ok
+test_ingreso_incorrecto_muestra_error (cuentas.tests.test_hu01.IngresoTests.test_ingreso_incorrecto_muestra_error) ... ok
+test_mecanico_ve_solo_su_menu (cuentas.tests.test_hu01.IngresoTests.test_mecanico_ve_solo_su_menu) ... ok
+test_sesion_expira_por_inactividad (cuentas.tests.test_hu01.IngresoTests.test_sesion_expira_por_inactividad)
+RNF11 · 15 minutos sin actividad cierran la sesión y se avisa al volver. ... ok
+test_vistas_internas_exigen_sesion (cuentas.tests.test_hu01.IngresoTests.test_vistas_internas_exigen_sesion) ... ok
+test_acceso_denegado_queda_en_log (cuentas.tests.test_hu02.CuentasYPerfilesTests.test_acceso_denegado_queda_en_log) ... ok
+test_admin_crea_cuenta_con_perfil (cuentas.tests.test_hu02.CuentasYPerfilesTests.test_admin_crea_cuenta_con_perfil) ... ok
+test_admin_entra_a_todos_los_modulos (cuentas.tests.test_hu02.CuentasYPerfilesTests.test_admin_entra_a_todos_los_modulos)
+RNF07 · recorre todas las URLs del menú. ... /Users/waduswadus/PycharmProjects/MaquetaRequisitos/clientes/views.py:82: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'clientes.models.Cliente'> ClienteQuerySet.
+  pagina = Paginator(clientes, 50).get_page(request.GET.get("page"))
+ok
+test_admin_no_se_desactiva_a_si_mismo (cuentas.tests.test_hu02.CuentasYPerfilesTests.test_admin_no_se_desactiva_a_si_mismo) ... ok
+test_cuenta_desactivada_no_ingresa (cuentas.tests.test_hu02.CuentasYPerfilesTests.test_cuenta_desactivada_no_ingresa) ... ok
+test_mecanico_no_entra_a_usuarios (cuentas.tests.test_hu02.CuentasYPerfilesTests.test_mecanico_no_entra_a_usuarios) ... ok
+test_no_se_crean_cuentas_cliente_desde_usuarios (cuentas.tests.test_hu02.CuentasYPerfilesTests.test_no_se_crean_cuentas_cliente_desde_usuarios) ... ok
+test_filtro_cliente (informes.tests.test_hu22.InformesTests.test_filtro_cliente) ... ok
+test_filtro_empleado (informes.tests.test_hu22.InformesTests.test_filtro_empleado) ... ok
+test_filtro_fecha (informes.tests.test_hu22.InformesTests.test_filtro_fecha) ... ok
+test_filtro_proveedor (informes.tests.test_hu22.InformesTests.test_filtro_proveedor) ... ok
+test_filtro_servicio (informes.tests.test_hu22.InformesTests.test_filtro_servicio) ... ok
+test_informe_grande_muestra_aviso (informes.tests.test_hu22.InformesTests.test_informe_grande_muestra_aviso) ... ok
+test_informe_pequeno_menos_de_5_segundos (informes.tests.test_hu22.InformesTests.test_informe_pequeno_menos_de_5_segundos)
+RNF03 · Evidencia en local (no es medición del VPS). ... ok
+test_mecanico_no_ve_informes (informes.tests.test_hu22.InformesTests.test_mecanico_no_ve_informes) ... ok
+test_todos_los_tipos_se_generan (informes.tests.test_hu22.InformesTests.test_todos_los_tipos_se_generan) ... ok
+test_vista_impresion_sin_menu (informes.tests.test_hu22.InformesTests.test_vista_impresion_sin_menu) ... ok
+test_exportacion_docx_mismas_filas (informes.tests.test_hu23.ExportarTests.test_exportacion_docx_mismas_filas) ... ok
+test_exportacion_no_incluye_contrasenas (informes.tests.test_hu23.ExportarTests.test_exportacion_no_incluye_contrasenas) ... ok
+test_exportacion_txt_mismas_filas (informes.tests.test_hu23.ExportarTests.test_exportacion_txt_mismas_filas) ... ok
+test_exportacion_xlsx_mismas_filas (informes.tests.test_hu23.ExportarTests.test_exportacion_xlsx_mismas_filas) ... ok
+test_estadisticas_solo_admin (informes.tests.test_hu24.EstadisticasWebTests.test_estadisticas_solo_admin) ... ok
+test_middleware_no_cuenta_recargas (informes.tests.test_hu24.EstadisticasWebTests.test_middleware_no_cuenta_recargas) ... ok
+test_middleware_registra_visita_publica (informes.tests.test_hu24.EstadisticasWebTests.test_middleware_registra_visita_publica) ... ok
+test_visitas_por_dia (informes.tests.test_hu24.EstadisticasWebTests.test_visitas_por_dia) ... ok
+test_visitas_por_mes (informes.tests.test_hu24.EstadisticasWebTests.test_visitas_por_mes) ... ok
+test_visitas_por_semana (informes.tests.test_hu24.EstadisticasWebTests.test_visitas_por_semana) ... ok
+test_administrativo_no_entra_a_personal (personal.tests.test_hu14.EmpleadosTests.test_administrativo_no_entra_a_personal) ... ok
+test_empleado_con_una_funcion_se_guarda (personal.tests.test_hu14.EmpleadosTests.test_empleado_con_una_funcion_se_guarda) ... ok
+test_empleado_sin_funcion_es_rechazado (personal.tests.test_hu14.EmpleadosTests.test_empleado_sin_funcion_es_rechazado) ... ok
+test_rut_invalido_es_rechazado (personal.tests.test_hu14.EmpleadosTests.test_rut_invalido_es_rechazado) ... ok
+test_cliente_no_entra_a_la_agenda (reservas.tests.test_hu08.ReservaWebTests.test_cliente_no_entra_a_la_agenda) ... ok
+test_empleado_reserva_en_local_para_un_cliente (reservas.tests.test_hu08.ReservaWebTests.test_empleado_reserva_en_local_para_un_cliente) ... ok
+test_fecha_pasada_o_fuera_de_plazo_es_rechazada (reservas.tests.test_hu08.ReservaWebTests.test_fecha_pasada_o_fuera_de_plazo_es_rechazada) ... ok
+test_festivo_no_aparece_disponible (reservas.tests.test_hu08.ReservaWebTests.test_festivo_no_aparece_disponible) ... ok
+test_flujo_reserva_completo_en_tres_pasos (reservas.tests.test_hu08.ReservaWebTests.test_flujo_reserva_completo_en_tres_pasos)
+RNF18 · servicio → fecha y hora → confirmar: 3 pantallas. ... ok
+test_hora_ocupada_no_se_ofrece (reservas.tests.test_hu08.ReservaWebTests.test_hora_ocupada_no_se_ofrece) ... ok
+test_hora_tomada_al_confirmar_vuelve_a_elegir (reservas.tests.test_hu08.ReservaWebTests.test_hora_tomada_al_confirmar_vuelve_a_elegir) ... ok
+test_pantallas_de_reserva_son_responsivas (reservas.tests.test_hu08.ReservaWebTests.test_pantallas_de_reserva_son_responsivas)
+RNF19 · viewport móvil y sin anchos fijos (se revisa a mano a 360 px). ... ok
+test_reserva_en_festivo_forzada_es_rechazada (reservas.tests.test_hu08.ReservaWebTests.test_reserva_en_festivo_forzada_es_rechazada)
+Cierra el criterio pendiente de HU09: aunque se fuerce la fecha, el servidor la rechaza. ... ok
+test_servicio_desactivado_no_se_puede_reservar (reservas.tests.test_hu08.ReservaWebTests.test_servicio_desactivado_no_se_puede_reservar) ... ok
+test_aviso_en_festivos_y_en_la_reserva (reservas.tests.test_hu09.AvisoFeriadosTests.test_aviso_en_festivos_y_en_la_reserva) ... ok
+test_demo_carga_solo_los_irrenunciables (reservas.tests.test_hu09.AvisoFeriadosTests.test_demo_carga_solo_los_irrenunciables) ... ok
+test_es_festivo_devuelve_true_para_fecha_registrada (reservas.tests.test_hu09.FestivosTests.test_es_festivo_devuelve_true_para_fecha_registrada) ... ok
+test_fecha_festiva_duplicada_es_rechazada (reservas.tests.test_hu09.FestivosTests.test_fecha_festiva_duplicada_es_rechazada) ... ok
+test_lista_por_anio (reservas.tests.test_hu09.FestivosTests.test_lista_por_anio) ... ok
+test_solo_admin_gestiona_festivos (reservas.tests.test_hu09.FestivosTests.test_solo_admin_gestiona_festivos) ... ok
+test_anulacion_libera_hora (reservas.tests.test_hu10.CambiarAnularTests.test_anulacion_libera_hora) ... ok
+test_cambio_libera_hora_anterior (reservas.tests.test_hu10.CambiarAnularTests.test_cambio_libera_hora_anterior) ... ok
+test_cliente_no_ve_reservas_de_otro (reservas.tests.test_hu10.CambiarAnularTests.test_cliente_no_ve_reservas_de_otro) ... ok
+test_empleado_anula_desde_la_agenda (reservas.tests.test_hu10.CambiarAnularTests.test_empleado_anula_desde_la_agenda) ... ok
+test_no_se_cambia_reserva_pasada (reservas.tests.test_hu10.CambiarAnularTests.test_no_se_cambia_reserva_pasada) ... ok
+test_administrativo_no_entra_a_atencion (reservas.tests.test_hu11.RegistrarServicioTests.test_administrativo_no_entra_a_atencion) ... ok
+test_cliente_no_registrado_muestra_derivacion (reservas.tests.test_hu11.RegistrarServicioTests.test_cliente_no_registrado_muestra_derivacion) ... ok
+test_empleado_sin_funcion_no_registra_servicio (reservas.tests.test_hu11.RegistrarServicioTests.test_empleado_sin_funcion_no_registra_servicio) ... ok
+test_registro_desde_reserva_la_marca_atendida (reservas.tests.test_hu11.RegistrarServicioTests.test_registro_desde_reserva_la_marca_atendida) ... ok
+test_registro_sin_reserva (reservas.tests.test_hu11.RegistrarServicioTests.test_registro_sin_reserva) ... ok
+test_servicio_realizado_guarda_cliente_fecha_y_mecanico (reservas.tests.test_hu11.RegistrarServicioTests.test_servicio_realizado_guarda_cliente_fecha_y_mecanico) ... ok
+test_boleta_sin_servicios_es_rechazada (ventas.tests.test_hu19.GenerarBoletaTests.test_boleta_sin_servicios_es_rechazada) ... ok
+test_boleta_toma_datos_de_servicio_y_cliente (ventas.tests.test_hu19.GenerarBoletaTests.test_boleta_toma_datos_de_servicio_y_cliente) ... ok
+test_emision_queda_en_log (ventas.tests.test_hu19.GenerarBoletaTests.test_emision_queda_en_log) ... ok
+test_numero_boleta_correlativo (ventas.tests.test_hu19.GenerarBoletaTests.test_numero_boleta_correlativo) ... ok
+test_servicio_documentado_no_aparece_pendiente (ventas.tests.test_hu19.GenerarBoletaTests.test_servicio_documentado_no_aparece_pendiente) ... ok
+test_servicio_queda_documentado (ventas.tests.test_hu19.GenerarBoletaTests.test_servicio_queda_documentado) ... ok
+test_anulacion_libera_servicios (ventas.tests.test_hu20.ModificarAnularBoletaTests.test_anulacion_libera_servicios) ... ok
+test_anulacion_sin_motivo_es_rechazada (ventas.tests.test_hu20.ModificarAnularBoletaTests.test_anulacion_sin_motivo_es_rechazada) ... ok
+test_anulada_conserva_lineas_y_motivo (ventas.tests.test_hu20.ModificarAnularBoletaTests.test_anulada_conserva_lineas_y_motivo) ... ok
+test_boleta_anulada_no_se_modifica (ventas.tests.test_hu20.ModificarAnularBoletaTests.test_boleta_anulada_no_se_modifica) ... ok
+test_boleta_no_se_puede_eliminar (ventas.tests.test_hu20.ModificarAnularBoletaTests.test_boleta_no_se_puede_eliminar) ... ok
+test_edicion_concurrente_de_boleta_avisa_conflicto (ventas.tests.test_hu20.ModificarAnularBoletaTests.test_edicion_concurrente_de_boleta_avisa_conflicto) ... ok
+test_modificacion_guarda_valor_anterior_en_log (ventas.tests.test_hu20.ModificarAnularBoletaTests.test_modificacion_guarda_valor_anterior_en_log) ... ok
+test_factura_asociada_a_servicio_y_cliente (ventas.tests.test_hu21.RegistrarFacturaTests.test_factura_asociada_a_servicio_y_cliente) ... ok
+test_registro_factura_queda_en_log (ventas.tests.test_hu21.RegistrarFacturaTests.test_registro_factura_queda_en_log) ... ok
+test_rut_de_facturacion_invalido_es_rechazado (ventas.tests.test_hu21.RegistrarFacturaTests.test_rut_de_facturacion_invalido_es_rechazado) ... ok
+test_servicio_facturado_no_aparece_para_boleta (ventas.tests.test_hu21.RegistrarFacturaTests.test_servicio_facturado_no_aparece_para_boleta) ... ok
+
+----------------------------------------------------------------------
+Ran 136 tests in 10.394s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+ OK
+System check identified no issues (0 silenced).

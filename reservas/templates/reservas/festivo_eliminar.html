@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block titulo %}Eliminar festivo{% endblock %}
+{% block contenido %}
+{% url 'reservas:festivos' as volver %}
+{% include "parciales/confirmar.html" with titulo="Eliminar el festivo del "|add:festivo_texto texto="La fecha vuelve a quedar disponible para reservar." boton="Eliminar festivo" volver_url=volver peligro=True %}
+{% endblock %}
+{% block trazabilidad %}HU09 · RF12 · CU05 · S1{% endblock %}

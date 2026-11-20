@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}Informes{% endblock %}
+{% block contenido %}
+<div class="page-head"><div><h1 class="page-title">Informes</h1><p class="page-sub">Elija un informe, filtre por fechas y otros datos, y luego imprímalo o expórtelo a Excel, Word o texto.</p></div></div>
+<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+  {% for clave, t in tipos.items %}
+    <a class="panel flex flex-col p-6 transition hover:border-violeta/40" href="{% url 'informes:informe' clave %}">
+      <span class="kpi-icon mb-5"><i class="bi bi-{{ t.icono }}"></i></span>
+      <h2 class="text-base font-semibold">{{ t.titulo }}</h2>
+      <p class="mt-1 text-sm text-base-content/60">{{ t.descripcion }}</p>
+      <span class="panel-link mt-5">Abrir informe <i class="bi bi-arrow-right"></i></span>
+    </a>
+  {% endfor %}
+</div>
+{% endblock %}
+{% block trazabilidad %}HU22 · RF30, RF31 · RNF03 · CU15 · S5{% endblock %}

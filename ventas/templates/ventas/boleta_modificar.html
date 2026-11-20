@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}Modificar boleta N° {{ boleta.numero }}{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% url 'ventas:boleta' boleta.numero %}"><i class="bi bi-arrow-left"></i>Boleta N° {{ boleta.numero }}</a>
+<div class="page-head"><div><h1 class="page-title">Modificar boleta N° {{ boleta.numero }}</h1><p class="page-sub">Cada cambio queda en el historial con el valor anterior y el nuevo.{% if demo %} Campos modificables: valor de demostración (V02).{% endif %}</p></div></div>
+<form method="post" novalidate class="panel max-w-3xl">{% csrf_token %}
+  <div class="panel-body">{% include "parciales/form.html" with una_columna=True %}</div>
+  <div class="panel-foot">
+    <a class="btn btn-quiet" href="{% url 'ventas:boleta' boleta.numero %}">Cancelar</a>
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+  </div>
+</form>
+{% endblock %}
+{% block trazabilidad %}HU20 · RF27 · RNF08 · CU12 · S3{% endblock %}

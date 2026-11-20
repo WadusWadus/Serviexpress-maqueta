@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block titulo %}Desactivar cuenta{% endblock %}
+{% block contenido %}
+{% url 'cuentas:usuarios' as volver %}
+{% with texto="La cuenta no se borra: queda inactiva y no puede ingresar. Puede reactivarla desde «Editar»." %}
+{% include "parciales/confirmar.html" with titulo="Desactivar la cuenta «"|add:usuario_editado.username|add:"»" boton="Desactivar cuenta" volver_url=volver peligro=True %}
+{% endwith %}
+{% endblock %}
+{% block trazabilidad %}HU02 · RF02 · CU02 · S1{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Orden N° {{ orden.numero }}{% endblock %}
+{% block contenido %}
+<div class="no-print">
+  <a class="back-link" href="{% url 'abastecimiento:ordenes' %}"><i class="bi bi-arrow-left"></i>Órdenes de pedido</a>
+  <div class="page-head">
+    <div><h1 class="page-title">Orden de pedido N° {{ orden.numero }}</h1><p class="page-sub flex items-center gap-2">{% include "abastecimiento/_estado_orden.html" with o=orden %}{{ orden.proveedor }}</p></div>
+    <div class="flex flex-wrap gap-2">
+      <button type="button" class="btn btn-quiet" onclick="window.print()"><i class="bi bi-printer"></i>Imprimir</button>
+      {% if not orden.tiene_recepciones %}
+        <a class="btn btn-quiet" href="{% url 'abastecimiento:orden_modificar' orden.numero %}"><i class="bi bi-pencil"></i>Modificar</a>
+        <a class="btn btn-danger-quiet" href="{% url 'abastecimiento:orden_eliminar' orden.numero %}"><i class="bi bi-trash"></i>Eliminar</a>
+      {% endif %}
+      {% if orden.estado != "Recepcionada completa" %}<a class="btn btn-primary" href="{% url 'abastecimiento:recepcionar' orden.numero %}"><i class="bi bi-box-seam"></i>Recepcionar</a>{% endif %}
+    </div>
+  </div>
+</div>
+<div class="grid grid-cols-12 gap-6">
+  <div class="col-span-12 xl:col-span-8">
+    <article class="doc">
+      {% with fecha=orden.fecha|date:"d-m-Y" %}{% include "ventas/_cabecera_documento.html" with tipo_documento="Orden de pedido" numero_documento=orden.numero fecha_documento=fecha %}{% endwith %}
+      <dl class="facts mb-4">
+        <div><dt>Proveedor</dt><dd>{{ orden.proveedor.razon_social }}</dd></div>
+        <div><dt>RUT</dt><dd>{{ orden.proveedor.rut }}</dd></div>
+        <div><dt>Solicitada por</dt><dd>{{ orden.creada_por.nombre_completo }}</dd></div>
+      </dl>
+      <div class="overflow-x-auto border-0">
+      <table class="table data-table" id="lineas-orden">
+        <thead><tr><th>Producto</th><th class="text-right">Solicitado</th><th class="text-right">Recibido</th><th class="text-right">Pendiente</th></tr></thead>
+        <tbody>{% for l in lineas %}<tr><td><span class="block font-semibold">{{ l.producto.descripcion }}</span><span class="text-sm text-base-content/60">{{ l.producto.codigo }}</span></td>
+          <td class="text-right">{{ l.cantidad_solicitada|cantidad }} {{ l.producto.get_unidad_display }}</td><td class="text-right">{{ l.cantidad_recibida|cantidad }}</td>
+          <td class="text-right font-semibold">{{ l.cantidad_pendiente|cantidad }}</td></tr>{% endfor %}</tbody>
+      </table>
+      </div>
+      {% if orden.observacion %}<p class="text-sm mt-4 mb-0"><strong>Observación:</strong> {{ orden.observacion }}</p>{% endif %}
+    </article>
+  </div>
+  <div class="col-span-12 xl:col-span-4 no-print">
+    <div class="panel">
+      <div class="panel-head"><h2 class="panel-title">Recepciones</h2></div>
+      <div class="panel-body">
+        <ul class="timeline-simple">
+          {% for r in recepciones %}
+            <li><div class="font-semibold">Recibido por {{ r.recibida_por.get_full_name|default:r.recibida_por.username }}</div>
+              <div class="text-xs text-base-content/50">{{ r.fecha|date:"d-m-Y H:i" }}</div>
+              <div class="text-sm mt-1">{% for l in r.lineas.all %}{{ l.producto.descripcion }} ×{{ l.cantidad|cantidad }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+              {% if r.observacion %}<div class="text-sm text-base-content/60">{{ r.observacion }}</div>{% endif %}</li>
+          {% empty %}<li class="text-base-content/60">Aún no se recibe nada de esta orden.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block trazabilidad %}HU16, HU17, HU18 · RF20–RF24 · CU10, CU11 · S4–S5{% endblock %}

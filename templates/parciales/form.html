@@ -1,0 +1,21 @@
+{% if form.non_field_errors %}
+  <div role="alert" class="alert alert-soft alert-error mb-5"><i class="bi bi-x-circle text-lg"></i><div>{% for e in form.non_field_errors %}<div>{{ e }}</div>{% endfor %}</div></div>
+{% endif %}
+{% for campo in form.hidden_fields %}{{ campo }}{% for e in campo.errors %}<div role="alert" class="alert alert-soft alert-error mb-4">{{ campo.label }}: {{ e }}</div>{% endfor %}{% endfor %}
+<div class="grid gap-5 {% if not una_columna %}sm:grid-cols-2{% endif %}">
+{% for campo in form.visible_fields %}
+  <div class="{% if campo.errors %}has-error{% endif %} {% if campo.widget_type == 'checkbox' or campo.widget_type == 'textarea' %}sm:col-span-2{% endif %}">
+    {% if campo.widget_type == "checkbox" %}
+      <label class="flex cursor-pointer items-start gap-3" for="{{ campo.id_for_label }}">
+        <span class="pt-0.5">{{ campo }}</span>
+        <span><span class="block text-sm font-medium">{{ campo.label }}</span>{% if campo.help_text %}<span class="field-help mt-0.5 block">{{ campo.help_text }}</span>{% endif %}</span>
+      </label>
+    {% else %}
+      <label class="field-label" for="{{ campo.id_for_label }}">{{ campo.label }}{% if campo.field.required %} <span class="text-primary" aria-hidden="true">*</span>{% endif %}</label>
+      {{ campo }}
+      {% if campo.help_text %}<p class="field-help">{{ campo.help_text }}</p>{% endif %}
+    {% endif %}
+    {% for e in campo.errors %}<p class="field-error">{{ campo.label }}: {{ e }}</p>{% endfor %}
+  </div>
+{% endfor %}
+</div>

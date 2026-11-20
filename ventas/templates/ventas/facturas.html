@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Facturas{% endblock %}
+{% block contenido %}
+<div class="page-head">
+  <div><h1 class="page-title">Facturas</h1><p class="page-sub">Servicios cobrados a empresas o clientes que piden factura.</p></div>
+  <div class="flex flex-wrap gap-2"><a class="btn btn-primary" href="{% url 'ventas:factura_nueva' %}"><i class="bi bi-plus-lg"></i>Nueva factura</a></div>
+</div>
+<div class="panel">
+  {% include "parciales/buscador.html" with placeholder="N°, cliente, RUT o razón social" %}
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>N°</th><th>Razón social</th><th>Cliente</th><th>Fecha</th><th class="text-right">Total</th></tr></thead>
+    <tbody>
+    {% for f in page_obj %}
+      <tr><td><a class="font-bold" href="{% url 'ventas:factura' f.numero %}">{{ f.numero }}</a></td>
+        <td><span class="cell-main">{{ f.razon_social }}</span><span class="cell-sub">RUT {{ f.rut_facturacion }}</span></td>
+        <td>{{ f.cliente.nombre_completo }}</td><td class="text-base-content/60">{{ f.fecha|date:"d-m-Y" }}</td><td class="text-right font-semibold">{{ f.total|pesos }}</td></tr>
+    {% empty %}<tr><td colspan="5" class="empty"><i class="bi bi-file-earmark-text"></i>No hay facturas.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "parciales/paginacion.html" %}
+</div>
+{% endblock %}
+{% block trazabilidad %}HU21 · RF29 · CU13 · S3{% endblock %}

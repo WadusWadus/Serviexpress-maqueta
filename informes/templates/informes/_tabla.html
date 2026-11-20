@@ -1,0 +1,12 @@
+{% load informes %}
+<div class="overflow-x-auto">
+<table class="table data-table" id="tabla-informe">
+  <thead><tr>{% for nombre, formato in informe.columnas %}<th class="{% if formato == 'pesos' or formato == 'cantidad' %}text-right{% endif %}">{{ nombre }}</th>{% endfor %}</tr></thead>
+  <tbody>
+  {% for fila in informe.filas %}
+    <tr>{% for valor, formato in fila|zip_columnas:informe.columnas %}<td class="{% if formato == 'pesos' or formato == 'cantidad' %}text-right tabular{% endif %}">{% celda valor formato %}</td>{% endfor %}</tr>
+  {% empty %}<tr><td colspan="{{ informe.columnas|length }}" class="empty"><i class="bi bi-inbox"></i>No hay datos con estos filtros.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>

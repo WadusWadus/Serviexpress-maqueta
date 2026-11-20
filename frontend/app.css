@@ -1,0 +1,186 @@
+/*
+ * SERVIEXPRESS · estilos (Tailwind CSS v4 + daisyUI v5)
+ * Fuente para compilar: `npm run css` genera static/css/app.css (lo que sirve Django).
+ *
+ * Carbón para la estructura, violeta eléctrico para la acción. Una sola familia tipográfica
+ * (Geist) con jerarquía marcada por tamaño, peso y contraste, no por color.
+ */
+
+@import "tailwindcss" source(none);
+/* Plantillas y formularios de Python (las clases de los campos se asignan en forms.py) */
+@source "../{templates,core,cuentas,personal,clientes,catalogo,reservas,abastecimiento,ventas,informes}/**/*.{html,py}";
+
+@plugin "daisyui" {
+  themes: false;
+  logs: false;
+}
+
+@plugin "daisyui/theme" {
+  name: "serviexpress";
+  default: true;
+  color-scheme: light;
+  --color-base-100: #ffffff;
+  --color-base-200: #f6f6f8;
+  --color-base-300: #e4e4e9;
+  --color-base-content: #16171b;
+  --color-primary: #8f00ff;
+  --color-primary-content: #ffffff;
+  --color-secondary: #22242a;
+  --color-secondary-content: #ffffff;
+  --color-accent: #b47cff;
+  --color-accent-content: #1d0533;
+  --color-neutral: #22242a;
+  --color-neutral-content: #e9eaee;
+  --color-info: #3557d6;
+  --color-info-content: #ffffff;
+  --color-success: #0f8a5f;
+  --color-success-content: #ffffff;
+  --color-warning: #c97a00;
+  --color-warning-content: #ffffff;
+  --color-error: #d1293d;
+  --color-error-content: #ffffff;
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.875rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --color-carbon: #22242a;
+  --color-carbon-2: #2c2f36;
+  --color-carbon-3: #3a3e46;
+  --color-violeta: #8f00ff;
+  --color-violeta-claro: #b47cff;
+  --color-violeta-tinte: #f4ecff;
+}
+
+@layer base {
+  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  body { @apply bg-base-200 text-base-content text-[0.9375rem] leading-relaxed; font-feature-settings: "ss01", "cv11"; }
+  h1, h2, h3, h4 { @apply text-base-content tracking-tight; text-wrap: balance; }
+  .tabular, td, .kpi-value { font-variant-numeric: tabular-nums; }
+  :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+}
+
+@layer utilities {  /* misma capa que daisyUI: así estos componentes ganan sobre sus estilos base */
+  /* ---------- Shell */
+  .sidebar { @apply bg-carbon text-neutral-content min-h-full w-64 flex flex-col; }
+  .sidebar-brand { @apply flex items-center gap-3 px-5 h-16 text-white font-semibold tracking-tight shrink-0; }
+  .brand-mark { @apply inline-grid place-items-center size-8 rounded-lg bg-violeta text-white text-base shrink-0; }
+  .sidebar-group { @apply px-3 pt-5 pb-1 text-xs font-medium text-white/45; }
+  .sidebar-link { @apply relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-white/75 transition-colors; }
+  .sidebar-link i { @apply text-base text-white/45 w-4 text-center; }
+  .sidebar-link:hover { @apply bg-white/5 text-white; }
+  .sidebar-link.is-active { @apply bg-white/10 text-white; }
+  .sidebar-link.is-active i { @apply text-violeta-claro; }
+  .sidebar-link.is-active::before { content: ""; @apply absolute -left-3 top-2 bottom-2 w-[3px] rounded-r bg-violeta; }
+  .topbar { @apply sticky top-0 z-30 flex items-center gap-3 h-16 px-4 sm:px-8 bg-base-200/85 backdrop-blur border-b border-base-300; }
+  .content { @apply w-full min-w-0 max-w-7xl px-4 sm:px-8 py-8; }
+  .drawer-content { min-width: 0; }
+
+  /* ---------- Encabezado de página */
+  .page-head { @apply flex flex-wrap items-end justify-between gap-4 mb-7; }
+  .page-title { @apply text-[1.75rem] leading-tight font-semibold tracking-tight; }
+  .page-sub { @apply mt-1.5 text-sm text-base-content/60 max-w-2xl; }
+  .back-link { @apply inline-flex items-center gap-1.5 mb-3 text-sm font-medium text-base-content/55 hover:text-base-content transition-colors; }
+
+  /* ---------- Paneles */
+  .panel { @apply bg-base-100 border border-base-300 rounded-box min-w-0; }
+  .panel-head { @apply flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-base-300; }
+  .panel-title { @apply text-[0.9375rem] font-semibold tracking-tight; }
+  .panel-note { @apply text-xs text-base-content/55; }
+  .panel-body { @apply p-6; }
+  .panel-foot { @apply flex flex-wrap items-center justify-end gap-2 px-6 py-4 border-t border-base-300 bg-base-200/50 rounded-b-box; }
+  .panel-bar { @apply flex flex-wrap items-center gap-2 px-6 py-3.5 border-b border-base-300; }
+  /* Barras de filtros: campos y botones siempre del mismo alto, vengan de Django o de la plantilla */
+  .panel-bar :is(.input, .select) { --size: calc(var(--size-field, .25rem) * 8); font-size: .8125rem; }
+  .panel-bar .btn { --size: calc(var(--size-field, .25rem) * 8); --btn-p: .75rem; font-size: .8125rem; }
+  .panel-bar .field-label { @apply mb-1 text-xs; }
+  .panel-link { @apply text-sm font-medium text-primary hover:underline underline-offset-4; }
+
+  /* ---------- Tablas */
+    .data-table thead th { @apply bg-base-200/60 text-xs font-medium text-base-content/55 py-3 px-6 whitespace-nowrap; }
+  .data-table tbody td { @apply px-6 py-3.5 border-base-300 align-middle; }
+  .data-table tbody tr { @apply border-base-300; }
+  .data-table tbody tr:hover { @apply bg-base-200/40; }
+  .data-table tbody tr:last-child td { border-bottom: 0; }
+  .cell-main { @apply font-medium text-base-content; }
+  .cell-sub { @apply block text-xs text-base-content/55 mt-0.5; }
+  .cell-actions { @apply text-right whitespace-nowrap; }
+  .empty { @apply px-6 py-14 text-center text-sm text-base-content/55; }
+  .empty i { @apply block text-3xl text-base-content/25 mb-3; }
+
+  /* ---------- Indicadores */
+  .kpis { @apply grid gap-4 mb-6; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+  .kpi { @apply bg-base-100 border border-base-300 rounded-box block p-5 transition-colors; }
+  a.kpi:hover { @apply border-violeta/40; }
+  .kpi-top { @apply flex items-center justify-between mb-4; }
+  .kpi-label { @apply text-sm font-medium text-base-content/60 leading-snug; }
+  .kpi-icon { @apply inline-grid place-items-center size-8 rounded-lg bg-violeta-tinte text-violeta; }
+  .kpi-value { @apply text-[1.75rem] leading-none font-semibold tracking-tight; }
+
+  /* ---------- Botón secundario y campos */
+  .btn-quiet { --btn-bg: var(--color-base-100); --btn-border: var(--color-base-300); --btn-fg: var(--color-base-content); --btn-shadow: none; }
+  .btn-quiet:hover { --btn-bg: var(--color-base-200); }
+  .btn-danger-quiet { --btn-bg: var(--color-base-100); --btn-border: var(--color-base-300); --btn-fg: var(--color-error); --btn-shadow: none; }
+  .btn-danger-quiet:hover { --btn-bg: var(--color-error); --btn-border: var(--color-error); --btn-fg: var(--color-error-content); }
+  .field-label { @apply block mb-1.5 text-sm font-medium text-base-content/85; }
+  .field-help { @apply mt-1.5 text-xs text-base-content/50; }
+  .field-error { @apply mt-1.5 text-xs font-medium text-error; }
+  :is(.input, .select, .textarea):is(:focus, :focus-within) { --input-color: var(--color-primary); outline-width: 1px; box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary) 15%, transparent); }
+  .has-error .input, .has-error .select, .has-error .textarea { @apply border-error; }
+  .form-grid { @apply grid gap-x-5 gap-y-5 sm:grid-cols-2; }
+  .form-grid .full { @apply sm:col-span-2; }
+
+  /* ---------- Listas tipo agenda */
+  .rows > li { @apply flex items-center gap-4 px-6 py-3.5 border-b border-base-300 last:border-b-0; }
+  .row-time { @apply w-14 shrink-0 font-semibold tabular-nums; }
+  .row-main { @apply min-w-0 flex-1; }
+  .row-title { @apply block font-medium truncate; }
+  .row-sub { @apply block text-xs text-base-content/55 truncate; }
+
+  /* ---------- Datos clave/valor */
+  .facts { @apply grid gap-x-8 gap-y-5; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+  .facts dt { @apply text-xs font-medium text-base-content/55 mb-1; }
+  .facts dd { @apply font-medium break-words; }
+
+  /* ---------- Documentos (boleta, factura, orden) */
+  .doc { @apply bg-base-100 border border-base-300 rounded-box p-6 sm:p-10; }
+  .doc-head { @apply flex flex-wrap justify-between gap-6 pb-6 mb-8 border-b-2 border-carbon; }
+  .doc-number { @apply text-right; }
+  .doc-total { @apply flex justify-between items-baseline py-2; }
+  .stamp { @apply inline-block -rotate-6 rounded-lg border-[3px] border-error px-4 py-1 text-xl font-bold tracking-[0.3em] text-error/90; }
+
+  /* ---------- Reserva */
+  .option-card { @apply bg-base-100 border border-base-300 rounded-box relative flex h-full cursor-pointer flex-col p-5 transition; }
+  .option-card:hover { @apply border-violeta/40; }
+  .option-card:has(input:checked) { @apply border-violeta bg-violeta-tinte; box-shadow: inset 0 0 0 1px var(--color-violeta); }
+  .option-card:has(input:focus-visible) { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+  .day-chip { @apply flex w-[4.5rem] shrink-0 flex-col items-center rounded-xl border border-base-300 bg-base-100 py-2.5 transition hover:border-violeta/50; }
+  .day-chip.is-active { @apply border-violeta bg-violeta text-white; }
+  .time-chip { @apply h-11 font-semibold tabular-nums; }
+  .time-chip:hover { --btn-bg: var(--color-violeta-tinte); --btn-border: var(--color-violeta); --btn-fg: var(--color-violeta); }
+
+  /* ---------- Línea de tiempo */
+  .timeline-simple > li { @apply relative pl-6 pb-5 last:pb-0; }
+  .timeline-simple > li::before { content: ""; @apply absolute left-0 top-1.5 size-2.5 rounded-full bg-violeta; }
+  .timeline-simple > li::after { content: ""; @apply absolute left-[4.5px] top-5 bottom-0 w-px bg-base-300; }
+  .timeline-simple > li:last-child::after { display: none; }
+
+  /* ---------- Modo presentación de curso (DJANGO_DEMO=1) */
+  .demo-band { @apply bg-violeta text-white text-xs font-medium text-center py-1.5 px-4; }
+  .trace-chip { @apply inline-block mt-10 rounded-full border border-violeta/30 bg-violeta-tinte px-3 py-1 text-xs font-medium text-violeta; }
+}
+
+@media print {
+  .no-print, .topbar, .sidebar, .drawer-side, .demo-band, .trace-chip { display: none !important; }
+  body { background: #fff; }
+  .content { padding: 0; max-width: none; }
+  .doc { border: 0; padding: 0; }
+}

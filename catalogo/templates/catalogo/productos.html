@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Productos{% endblock %}
+{% block contenido %}
+<div class="page-head">
+  <div><h1 class="page-title">Productos</h1><p class="page-sub">Repuestos e insumos que usan los servicios y que se piden a los proveedores.</p></div>
+  <div class="flex flex-wrap gap-2"><a class="btn btn-primary" href="{% url 'catalogo:producto_nuevo' %}"><i class="bi bi-plus-lg"></i>Nuevo producto</a></div>
+</div>
+<div class="panel">
+  {% include "parciales/buscador.html" with placeholder="Buscar por código o descripción" %}
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>Código</th><th>Descripción</th><th>Unidad</th><th>Estado</th><th></th></tr></thead>
+    <tbody>
+    {% for p in page_obj %}
+      <tr>
+        <td><span class="badge badge-outline badge-sm font-medium">{{ p.codigo }}</span></td><td class="cell-main">{{ p.descripcion }}</td><td>{{ p.get_unidad_display }}</td>
+        <td>{% if p.activo %}<span class="badge badge-soft badge-success">Activo</span>{% else %}<span class="badge badge-soft badge-ghost">Desactivado</span>{% endif %}</td>
+        <td class="cell-actions">
+          <a class="btn btn-sm btn-quiet" href="{% url 'catalogo:producto_editar' p.pk %}"><i class="bi bi-pencil"></i>Editar</a>
+          {% if p.activo %}<a class="btn btn-sm btn-danger-quiet" href="{% url 'catalogo:producto_desactivar' p.pk %}">Desactivar</a>{% endif %}
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="5" class="empty"><i class="bi bi-tag"></i>No hay productos.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "parciales/paginacion.html" %}
+</div>
+{% endblock %}
+{% block trazabilidad %}HU13 · RF17 · CU08 · S2{% endblock %}

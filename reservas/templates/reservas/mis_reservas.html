@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Mis reservas{% endblock %}
+{% block contenido %}
+<div class="page-head">
+  <div><h1 class="page-title">Mis reservas</h1><p class="page-sub">Puede cambiar o anular una hora mientras no haya llegado su fecha.</p></div>
+  <div class="flex flex-wrap gap-2"><a class="btn btn-primary" href="{% url 'reservas:paso_servicio' %}"><i class="bi bi-calendar-plus"></i>Reservar hora</a></div>
+</div>
+<div class="panel mb-4">
+  <div class="panel-head"><h2 class="panel-title">Próximas</h2></div>
+  <ul class="rows" id="reservas-vigentes">
+    {% for r in proximas %}
+      <li>
+        <span class="row-time">{{ r.hora_inicio|time:"H:i" }}</span>
+        <div class="row-main"><strong>{{ r.fecha|date:"l j \d\e F" }}</strong><span>{{ r.servicio.nombre }} · {{ r.servicio.precio|pesos }} · N° {{ r.numero }}</span></div>
+        <div class="flex gap-2 flex-wrap">
+          <a class="btn btn-sm btn-quiet" href="{% url 'reservas:cambiar' r.numero %}"><i class="bi bi-arrow-repeat"></i>Cambiar</a>
+          <a class="btn btn-sm btn-danger-quiet" href="{% url 'reservas:anular' r.numero %}">Anular</a>
+        </div>
+      </li>
+    {% empty %}<li class="block empty"><i class="bi bi-calendar"></i>No tiene horas reservadas.</li>
+    {% endfor %}
+  </ul>
+</div>
+<div class="panel">
+  <div class="panel-head"><h2 class="panel-title">Historial</h2></div>
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>Fecha</th><th>Servicio</th><th>N°</th><th>Estado</th></tr></thead>
+    <tbody>
+    {% for r in historial %}
+      <tr><td class="whitespace-nowrap">{{ r.fecha|date:"d-m-Y" }} {{ r.hora_inicio|time:"H:i" }}</td><td>{{ r.servicio.nombre }}</td><td class="text-base-content/60">{{ r.numero }}</td>
+        <td>{% include "reservas/_estado_reserva.html" %}</td></tr>
+    {% empty %}<tr><td colspan="4" class="empty">Sin reservas anteriores.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}
+{% block trazabilidad %}HU10 · RF13 · CU04 · S2{% endblock %}

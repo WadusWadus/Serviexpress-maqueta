@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Informe de {{ titulo|lower }}{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% url 'informes:inicio' %}"><i class="bi bi-arrow-left"></i>Informes</a>
+<div class="page-head">
+  <div><h1 class="page-title">{{ titulo }}</h1>{% if informe %}<p class="page-sub">{{ informe.desde|date:"j \d\e F" }} al {{ informe.hasta|date:"j \d\e F \d\e Y" }} · {{ informe.filas|length }} filas</p>{% endif %}</div>
+  {% if informe %}
+  <div class="flex flex-wrap gap-2" id="acciones-informe">
+    <a class="btn btn-quiet" target="_blank" rel="noopener" href="{% url_con imprimir=1 %}"><i class="bi bi-printer"></i>Imprimir</a>
+    <details class="dropdown dropdown-end">
+      <summary class="btn btn-primary"><i class="bi bi-download"></i>Exportar<i class="bi bi-chevron-down text-xs"></i></summary>
+      <ul class="menu dropdown-content z-20 mt-2 w-48 rounded-box border border-base-300 bg-base-100 p-2 shadow-lg">
+        <li><a href="{% url_con formato='xlsx' %}"><i class="bi bi-file-earmark-excel text-success"></i>Excel</a></li>
+        <li><a href="{% url_con formato='docx' %}"><i class="bi bi-file-earmark-word text-info"></i>Word</a></li>
+        <li><a href="{% url_con formato='txt' %}"><i class="bi bi-file-earmark-text"></i>Texto</a></li>
+      </ul>
+    </details>
+  </div>
+  {% endif %}
+</div>
+<section class="panel mb-6">
+  <form method="get" class="panel-bar items-end border-0" id="form-informe" novalidate>
+    {% for campo in form %}
+      <div class="w-full sm:w-44 {% if campo.errors %}has-error{% endif %}">
+        <label class="field-label" for="{{ campo.id_for_label }}">{{ campo.label }}</label>{{ campo }}
+        {% for e in campo.errors %}<p class="field-error">{{ campo.label }}: {{ e }}</p>{% endfor %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary"><i class="bi bi-arrow-repeat"></i>Generar</button>
+  </form>
+</section>
+<div role="status" class="alert alert-soft alert-info mb-6 hidden" id="indicador-carga"><span class="loading loading-spinner loading-sm"></span><span>Generando el informe…</span></div>
+{% if informe %}
+  {% if informe.grande %}
+    <div role="alert" class="alert alert-soft alert-warning mb-6" id="aviso-informe-grande"><i class="bi bi-exclamation-triangle text-lg"></i>
+      <span>Informe grande: el tiempo de respuesta no está comprometido. Los informes de más de un mes o de más de 1.000 filas pueden tardar más en generarse.</span></div>
+  {% endif %}
+  {% include "informes/_totales.html" %}
+  <section class="panel">{% include "informes/_tabla.html" %}</section>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  // RNF03: indicador de avance mientras se genera el informe.
+  const form = document.getElementById("form-informe");
+  const indicador = document.getElementById("indicador-carga");
+  if (form && indicador) form.addEventListener("submit", () => indicador.classList.remove("hidden"));
+})();
+</script>
+{% endblock %}
+{% block trazabilidad %}HU22, HU23 · RF30–RF32 · RNF03 · CU15 · S5–S6{% endblock %}

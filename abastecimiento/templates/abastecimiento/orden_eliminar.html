@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Eliminar orden N° {{ orden.numero }}{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% url 'abastecimiento:orden' orden.numero %}"><i class="bi bi-arrow-left"></i>Orden N° {{ orden.numero }}</a>
+<div class="panel max-w-lg">
+  <div class="panel-body">
+    <h1 class="h4">Eliminar la orden N° {{ orden.numero }}</h1>
+    <p class="text-base-content/60">{{ orden.proveedor }} · {{ orden.fecha|date:"d-m-Y" }}</p>
+    <ul class="text-sm">{% for l in orden.lineas.all %}<li>{{ l.producto.descripcion }} ×{{ l.cantidad_solicitada|cantidad }}</li>{% endfor %}</ul>
+    <p class="mb-0">Su contenido queda en el registro de auditoría. <strong>El número {{ orden.numero }} no se vuelve a usar.</strong></p>
+  </div>
+  <form method="post" class="panel-foot">{% csrf_token %}
+    <a class="btn btn-quiet" href="{% url 'abastecimiento:orden' orden.numero %}">Cancelar</a>
+    <button type="submit" class="btn btn-error">Eliminar orden</button>
+  </form>
+</div>
+{% endblock %}
+{% block trazabilidad %}HU17 · RF22 · RNF08 · CU10 · S5{% endblock %}

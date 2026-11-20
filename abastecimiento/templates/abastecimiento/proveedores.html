@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}Proveedores{% endblock %}
+{% block contenido %}
+<div class="page-head">
+  <div><h1 class="page-title">Proveedores</h1><p class="page-sub">Empresas a las que el taller compra repuestos e insumos.</p></div>
+  <div class="flex flex-wrap gap-2"><a class="btn btn-primary" href="{% url 'abastecimiento:proveedor_nuevo' %}"><i class="bi bi-plus-lg"></i>Nuevo proveedor</a></div>
+</div>
+<div class="panel">
+  {% include "parciales/buscador.html" with placeholder="RUT, razón social o rubro" %}
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>Proveedor</th><th>Rubro</th><th>Contacto</th><th>Estado</th></tr></thead>
+    <tbody>
+    {% for p in page_obj %}
+      <tr><td><a class="cell-main" href="{% url 'abastecimiento:proveedor' p.pk %}">{{ p.razon_social }}</a><span class="cell-sub">RUT {{ p.rut }}</span></td>
+        <td>{{ p.rubro }}</td><td><span class="block">{{ p.nombre_contacto|default:"—" }}</span><span class="text-sm text-base-content/60">{{ p.telefono }}</span></td>
+        <td>{% if p.activo %}<span class="badge badge-soft badge-success">Activo</span>{% else %}<span class="badge badge-soft badge-ghost">Inactivo</span>{% endif %}</td></tr>
+    {% empty %}<tr><td colspan="4" class="empty"><i class="bi bi-building"></i>No hay proveedores.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "parciales/paginacion.html" %}
+</div>
+{% endblock %}
+{% block trazabilidad %}HU15 · RF19 · CU09 · S4{% endblock %}

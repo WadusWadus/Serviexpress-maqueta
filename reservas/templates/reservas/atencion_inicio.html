@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block titulo %}Reservas de hoy{% endblock %}
+{% block contenido %}
+<div class="page-head">
+  <div><h1 class="page-title">Reservas de hoy</h1><p class="page-sub">{{ hoy|date:"l j \d\e F" }}. Registre cada servicio al terminarlo para que se pueda cobrar.</p></div>
+  <div class="flex flex-wrap gap-2"><a class="btn btn-quiet" href="{% url 'atencion:registrar' %}"><i class="bi bi-clipboard-check"></i>Cliente sin reserva</a></div>
+</div>
+<div class="panel">
+  <ul class="rows" id="reservas-hoy">
+    {% for r in reservas %}
+      <li>
+        <span class="row-time">{{ r.hora_inicio|time:"H:i" }}</span>
+        <div class="row-main"><strong>{{ r.servicio.nombre }}</strong><span>{{ r.cliente.nombre_completo }} · Reserva N° {{ r.numero }}</span></div>
+        <a class="btn btn-sm btn-primary" href="{% url 'atencion:registrar' %}?reserva={{ r.numero }}">Registrar servicio</a>
+      </li>
+    {% empty %}<li class="block empty"><i class="bi bi-check2-circle"></i>No quedan reservas por atender hoy.</li>
+    {% endfor %}
+  </ul>
+  <div class="panel-foot"><a class="text-sm font-semibold" href="{% url 'atencion:realizados' %}">Ver servicios registrados hoy</a></div>
+</div>
+{% endblock %}
+{% block trazabilidad %}HU11 · RF14 · CU06 · S3{% endblock %}

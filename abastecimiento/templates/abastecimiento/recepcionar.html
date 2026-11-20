@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Recepcionar orden N° {{ orden.numero }}{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% url 'abastecimiento:orden' orden.numero %}"><i class="bi bi-arrow-left"></i>Orden N° {{ orden.numero }}</a>
+<div class="page-head"><div><h1 class="page-title">Recepcionar orden N° {{ orden.numero }}</h1><p class="page-sub">{{ orden.proveedor }}. Ingrese lo que llegó; si no coincide con lo pendiente, se le pedirá confirmar.</p></div></div>
+{% if advertencias %}
+  <div class="alert alert-soft alert-warning" role="alert" id="advertencias"><i class="bi bi-exclamation-triangle"></i><div>{% for a in advertencias %}<div>{{ a }}</div>{% endfor %}</div></div>
+{% endif %}
+<form method="post" novalidate class="panel max-w-3xl">{% csrf_token %}
+  {% if form.non_field_errors %}<div class="alert alert-soft alert-error m-3"><i class="bi bi-x-circle"></i><div>{% for e in form.non_field_errors %}<div>{{ e }}</div>{% endfor %}</div></div>{% endif %}
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>Producto</th><th class="text-right">Pendiente</th><th class="w-36">Recibido</th></tr></thead>
+    <tbody>
+    {% for linea, campo in form.filas %}
+      <tr><td><span class="block font-semibold">{{ linea.producto.descripcion }}</span><span class="text-sm text-base-content/60">{{ linea.producto.codigo }}</span></td>
+        <td class="text-right">{{ linea.cantidad_pendiente|cantidad }} {{ linea.producto.get_unidad_display }}</td>
+        <td>{{ campo }}{% for e in campo.errors %}<div class="field-error">{{ e }}</div>{% endfor %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <div class="panel-head border-t border-base-300"><h2 class="panel-title">¿Llegó otro producto?</h2><span class="text-base-content/60 text-sm">Ingrese su código; si no está en la orden, se rechaza</span></div>
+  <div class="panel-body">
+    {% for codigo, cantidad in form.filas_extra %}
+      <div class="grid grid-cols-12 gap-2 mb-2">
+        <div class="col-span-7 md:col-span-6">{{ codigo }}</div><div class="col-span-5 md:col-span-3">{{ cantidad }}</div>
+        {% for e in cantidad.errors %}<div class="col-span-12 field-error">{{ e }}</div>{% endfor %}
+      </div>
+    {% endfor %}
+    <label class="field-label mt-4" for="{{ form.observacion.id_for_label }}">Observación</label>{{ form.observacion }}
+  </div>
+  <div class="panel-foot">
+    <a class="btn btn-quiet" href="{% url 'abastecimiento:orden' orden.numero %}">Cancelar</a>
+    {% if advertencias %}
+      <button type="submit" class="btn btn-quiet">Revisar de nuevo</button>
+      <button type="submit" name="confirmar" value="1" class="btn btn-warning">Confirmar con diferencias</button>
+    {% else %}
+      <button type="submit" class="btn btn-primary"><i class="bi bi-box-seam"></i>Registrar recepción</button>
+    {% endif %}
+  </div>
+</form>
+{% endblock %}
+{% block trazabilidad %}HU18 · RF24, RF25 · CU11 · S4{% endblock %}

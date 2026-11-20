@@ -1,0 +1,107 @@
+{% load static %}<!doctype html>
+<html lang="es" data-theme="serviexpress">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Inicio{% endblock %} · SERVIEXPRESS</title>
+  <meta name="theme-color" content="#22242a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        integrity="sha384-XGjxtQfXaH2tnPFa9x+ruJTuLE3Aa6LhHSWRr1XeTyhezb4abCG4ccI5AkVDxqC+" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  {% block cabecera %}{% endblock %}
+</head>
+<body>
+{% if demo %}<div class="demo-band">Maqueta de demostración: datos ficticios</div>{% endif %}
+
+{% block cuerpo %}
+{% if user.is_authenticated %}
+<div class="drawer lg:drawer-open">
+  <input id="menu-lateral" type="checkbox" class="drawer-toggle" aria-label="Mostrar menú">
+  <div class="drawer-content flex min-h-screen flex-col">
+    <header class="topbar no-print">
+      <label for="menu-lateral" class="btn btn-ghost btn-square btn-sm lg:hidden" aria-label="Abrir menú"><i class="bi bi-list text-xl"></i></label>
+      <a class="flex items-center gap-2.5 font-semibold tracking-tight lg:hidden" href="{% url 'core:panel' %}">{% include "parciales/marca.html" %}</a>
+      <div class="ml-auto flex items-center gap-2">
+        <button type="button" class="btn btn-quiet btn-sm" aria-controls="panel-ayuda" onclick="document.getElementById('panel-ayuda').showModal()">
+          <i class="bi bi-question-circle"></i><span class="hidden sm:inline">Ayuda</span>
+        </button>
+      </div>
+    </header>
+    <main class="content" id="contenido">
+      {% include "parciales/mensajes.html" %}
+      {% block contenido %}{% endblock %}
+      {% if demo %}<div class="trace-chip" title="Historia de usuario, requisitos, caso de uso y sprint">{% block trazabilidad %}{% endblock %}</div>{% endif %}
+    </main>
+  </div>
+
+  <div class="drawer-side z-40">
+    <label for="menu-lateral" aria-label="Cerrar menú" class="drawer-overlay"></label>
+    <aside class="sidebar">
+      <a class="sidebar-brand" href="{% url 'core:panel' %}">{% include "parciales/marca.html" with bajada=True %}</a>
+      <nav id="menu-perfil" class="flex-1 overflow-y-auto px-3 pb-4" aria-label="Módulos">
+        {% url 'core:panel' as url_panel %}
+        <a class="sidebar-link {% if request.path == url_panel %}is-active{% endif %}" href="{{ url_panel }}"><i class="bi bi-house"></i>Inicio</a>
+        {% for grupo in menu %}{% if grupo.laterales %}
+          <div class="sidebar-group">{{ grupo.grupo }}</div>
+          {% for e in grupo.laterales %}
+            <a class="sidebar-link {% if e.activo %}is-active{% endif %}" href="{{ e.href }}" {% if e.activo %}aria-current="page"{% endif %}><i class="bi bi-{{ e.icono }}"></i>{{ e.etiqueta }}</a>
+          {% endfor %}
+        {% endif %}{% endfor %}
+      </nav>
+      <div class="m-3 flex items-center gap-3 rounded-xl bg-white/5 p-3">
+        <span class="inline-grid size-9 shrink-0 place-items-center rounded-full bg-violeta-tinte text-xs font-semibold text-violeta" aria-hidden="true">{% if user.first_name %}{{ user.first_name|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper }}{% else %}{{ user.username|slice:":2"|upper }}{% endif %}</span>
+        <div class="min-w-0 flex-1 leading-tight">
+          <div class="truncate text-sm font-medium text-white">{{ user.get_full_name|default:user.username }}</div>
+          <div class="truncate text-xs text-white/50">{{ user.get_perfil_display }}</div>
+        </div>
+        <form method="post" action="{% url 'cuentas:salir' %}">{% csrf_token %}
+          <button type="submit" class="btn btn-ghost btn-square btn-sm text-white/60 hover:bg-white/10 hover:text-white" title="Cerrar sesión" aria-label="Cerrar sesión"><i class="bi bi-box-arrow-right"></i></button>
+        </form>
+      </div>
+    </aside>
+  </div>
+</div>
+{% else %}
+<div class="flex min-h-screen flex-col bg-base-100">
+  <header class="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-5 sm:px-8">
+    <a class="flex items-center gap-2.5 font-semibold tracking-tight" href="{% url 'core:inicio' %}">{% include "parciales/marca.html" with bajada=True %}</a>
+    <a class="btn btn-quiet btn-sm ml-auto" href="{% url 'cuentas:ingresar' %}">Ingresar</a>
+  </header>
+  <main class="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-8">
+    {% include "parciales/mensajes.html" %}
+    {% block contenido_publico %}{% endblock %}
+  </main>
+</div>
+{% endif %}
+{% endblock %}
+
+<dialog id="panel-ayuda" class="modal modal-end" aria-labelledby="titulo-ayuda">
+  <div class="modal-box flex h-full max-h-none w-full max-w-md flex-col rounded-none p-0">
+    <div class="flex items-center justify-between border-b border-base-300 px-6 py-4">
+      <h2 class="text-base font-semibold" id="titulo-ayuda">{% if ayuda %}Ayuda: {{ ayuda.titulo }}{% else %}Ayuda{% endif %}</h2>
+      <form method="dialog"><button class="btn btn-ghost btn-square btn-sm" aria-label="Cerrar"><i class="bi bi-x-lg"></i></button></form>
+    </div>
+    <div class="flex-1 overflow-y-auto px-6 py-5 text-sm leading-relaxed text-base-content/80 [&_p]:mb-3" id="contenido-ayuda">
+      {% if ayuda %}
+        {{ ayuda.contenido|linebreaks }}
+      {% else %}
+        <p>Esta pantalla no tiene una sección propia en el manual. Revise el manual general.</p>
+      {% endif %}
+      <a class="btn btn-quiet btn-sm mt-2" href="{% url 'core:ayuda' %}"><i class="bi bi-journal-text"></i>Ver el manual completo</a>
+    </div>
+  </div>
+  <form method="dialog" class="modal-backdrop"><button>Cerrar</button></form>
+</dialog>
+
+<script>
+  document.addEventListener("click", (e) => {
+    const cerrar = e.target.closest("[data-cerrar-aviso]");
+    if (cerrar) cerrar.closest("[role=alert]").remove();
+  });
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

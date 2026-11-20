@@ -1,0 +1,6 @@
+{% load informes %}
+<div class="kpis" id="totales-informe">
+  {% for etiqueta, valor, formato in informe.totales %}
+    <div class="kpi"><p class="kpi-label mb-3">{{ etiqueta }}</p><p class="kpi-value text-2xl">{% celda valor formato %}</p></div>
+  {% endfor %}
+</div>

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% if orden %}{% url 'abastecimiento:orden' orden.numero %}{% else %}{% url 'abastecimiento:ordenes' %}{% endif %}"><i class="bi bi-arrow-left"></i>{% if orden %}Orden N° {{ orden.numero }}{% else %}Órdenes de pedido{% endif %}</a>
+<div class="page-head"><div><h1 class="page-title">{{ titulo }}</h1><p class="page-sub">Solicitada por {{ empleado.nombre_completo }}.{% if not orden %} El número se asigna al confirmar.{% endif %}</p></div></div>
+<form method="post" novalidate class="panel max-w-3xl">{% csrf_token %}
+  <div class="panel-body">{% include "parciales/form.html" %}</div>
+  <div class="panel-head border-t border-base-300"><h2 class="panel-title">Productos</h2><span class="text-base-content/60 text-sm">Deje en blanco las filas que no use</span></div>
+  <div class="panel-body">
+    {{ formset.management_form }}
+    {% if formset.non_form_errors %}<div class="alert alert-soft alert-error"><i class="bi bi-x-circle"></i><div>{% for e in formset.non_form_errors %}<div>{{ e }}</div>{% endfor %}</div></div>{% endif %}
+    {% for f in formset %}
+      <div class="grid grid-cols-12 gap-2 items-end mb-4">
+        <div class="col-span-12 sm:col-span-8"><label class="field-label" for="{{ f.producto.id_for_label }}">Producto {{ forloop.counter }}</label>{{ f.producto }}</div>
+        <div class="col-span-12 sm:col-span-4"><label class="field-label" for="{{ f.cantidad.id_for_label }}">Cantidad</label>{{ f.cantidad }}</div>
+        {% for campo in f %}{% for e in campo.errors %}<div class="col-span-12 field-error">{{ campo.label }} {{ forloop.parentloop.parentloop.counter }}: {{ e }}</div>{% endfor %}{% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="panel-foot">
+    <a class="btn btn-quiet" href="{% if orden %}{% url 'abastecimiento:orden' orden.numero %}{% else %}{% url 'abastecimiento:ordenes' %}{% endif %}">Cancelar</a>
+    <button type="submit" class="btn btn-primary">{% if orden %}Guardar cambios{% else %}Confirmar orden{% endif %}</button>
+  </div>
+</form>
+{% endblock %}
+{% block trazabilidad %}{{ traza }}{% endblock %}

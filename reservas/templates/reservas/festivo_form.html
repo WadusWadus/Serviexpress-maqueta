@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% url 'reservas:festivos' %}"><i class="bi bi-arrow-left"></i>Días festivos</a>
+<div class="page-head"><div><h1 class="page-title">{{ titulo }}</h1></div></div>
+<form method="post" novalidate class="panel max-w-3xl">{% csrf_token %}
+  <div class="panel-body">{% include "parciales/form.html" %}</div>
+  <div class="panel-foot">
+    <a class="btn btn-quiet" href="{% url 'reservas:festivos' %}">Cancelar</a>
+    <button type="submit" class="btn btn-primary">Guardar festivo</button>
+  </div>
+</form>
+{% endblock %}
+{% block trazabilidad %}HU09 · RF12 · CU05 · S1{% endblock %}

@@ -1,0 +1,24 @@
+{% load static informes %}<!doctype html>
+<html lang="es" data-theme="serviexpress">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Informe de {{ titulo|lower }} · SERVIEXPRESS</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        integrity="sha384-XGjxtQfXaH2tnPFa9x+ruJTuLE3Aa6LhHSWRr1XeTyhezb4abCG4ccI5AkVDxqC+" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body class="bg-base-100 p-8" onload="window.print()">
+  <div class="doc-head">
+    <div class="flex items-center gap-3 font-semibold">{% include "parciales/marca.html" with bajada=True %}</div>
+    <div class="doc-number"><p class="text-xs font-medium text-base-content/55">Informe</p><p class="text-xl font-semibold">{{ titulo }}</p>
+      <p class="text-xs text-base-content/55">Generado el {% now "d-m-Y H:i" %} por {{ user.get_full_name|default:user.username }}</p></div>
+  </div>
+  <p class="mb-4 text-xs text-base-content/60">{% for etiqueta, valor in informe.filtros_aplicados %}{{ etiqueta }}: {{ valor }}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+  {% include "informes/_tabla.html" %}
+  <dl class="ml-auto mt-6 max-w-sm text-sm">
+    {% for etiqueta, valor, formato in informe.totales %}<div class="flex justify-between border-b border-base-300 py-1.5"><dt class="text-base-content/60">{{ etiqueta }}</dt><dd class="font-semibold tabular">{% celda valor formato %}</dd></div>{% endfor %}
+  </dl>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block titulo %}Ingresar{% endblock %}
+{% block cuerpo %}
+<div class="grid min-h-screen bg-base-100 lg:grid-cols-2">
+  <div class="relative hidden overflow-hidden bg-carbon p-12 text-white lg:flex lg:flex-col lg:justify-between">
+    <div class="pointer-events-none absolute -bottom-40 -left-40 size-[36rem] rounded-full bg-violeta/25 blur-3xl"></div>
+    <a class="relative flex items-center gap-2.5 font-semibold tracking-tight" href="{% url 'core:inicio' %}">{% include "parciales/marca.html" with bajada=True %}</a>
+    <div class="relative">
+      <p class="max-w-md text-3xl font-semibold leading-tight tracking-tight">Reservas, atención, ventas y bodega del taller en un solo lugar.</p>
+      <p class="mt-4 max-w-md text-white/60">Los clientes reservan y revisan sus horas. El personal gestiona el día a día del taller.</p>
+    </div>
+    <p class="relative text-sm text-white/40">© {% now "Y" %} SERVIEXPRESS</p>
+  </div>
+  <div class="flex items-center justify-center px-5 py-12">
+    <div class="w-full max-w-sm">
+      <a class="mb-10 flex items-center gap-2.5 font-semibold tracking-tight lg:hidden" href="{% url 'core:inicio' %}">{% include "parciales/marca.html" %}</a>
+      <h1 class="text-2xl font-semibold tracking-tight">Ingresar</h1>
+      <p class="mt-1.5 mb-8 text-sm text-base-content/60">Use el usuario y la contraseña que le entregó el taller.</p>
+      {% include "parciales/mensajes.html" %}
+      <form method="post" novalidate>{% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+        {% include "parciales/form.html" with una_columna=True %}
+        <button type="submit" class="btn btn-primary mt-7 w-full">Ingresar</button>
+      </form>
+      <a class="back-link mt-8" href="{% url 'core:inicio' %}"><i class="bi bi-arrow-left"></i>Volver al sitio</a>
+      {% if demo %}
+        <div class="mt-6 rounded-xl border border-dashed border-violeta/40 bg-violeta-tinte p-4 text-sm text-base-content/80" id="credenciales-demo">
+          <strong>Usuarios de demostración.</strong> Contraseña de todos: <code class="font-mono text-violeta">Demo2026!</code><br>
+          admin, administrativo, administrativo2, mecanico, cliente1, cliente2
+        </div>
+        <span class="trace-chip">HU01 · RF01 · RNF05, RNF10, RNF11 · CU01 · S1</span>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

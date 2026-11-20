@@ -1,0 +1,10 @@
+{% load sx %}
+{% if page_obj and page_obj.paginator.num_pages > 1 %}
+<div class="flex flex-wrap items-center justify-between gap-3 border-t border-base-300 px-6 py-3.5">
+  <span class="text-xs text-base-content/55">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }} · {{ page_obj.paginator.count }} registros</span>
+  <nav class="join" aria-label="Paginación">
+    {% if page_obj.has_previous %}<a class="btn btn-quiet btn-sm join-item" href="{% url_con page=page_obj.previous_page_number %}"><i class="bi bi-chevron-left"></i>Anterior</a>{% endif %}
+    {% if page_obj.has_next %}<a class="btn btn-quiet btn-sm join-item" href="{% url_con page=page_obj.next_page_number %}">Siguiente<i class="bi bi-chevron-right"></i></a>{% endif %}
+  </nav>
+</div>
+{% endif %}

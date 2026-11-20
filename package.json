@@ -1,0 +1,14 @@
+{
+  "name": "serviexpress-frontend",
+  "private": true,
+  "description": "Compila el CSS de SERVIEXPRESS (Tailwind CSS + daisyUI). El CSS resultante queda en static/css/app.css.",
+  "scripts": {
+    "css": "tailwindcss -i frontend/app.css -o static/css/app.css --minify",
+    "css:watch": "tailwindcss -i frontend/app.css -o static/css/app.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "4.3.3",
+    "daisyui": "5.7.50",
+    "tailwindcss": "4.3.3"
+  }
+}

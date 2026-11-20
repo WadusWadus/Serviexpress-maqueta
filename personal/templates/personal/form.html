@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% url 'personal:lista' %}"><i class="bi bi-arrow-left"></i>Empleados</a>
+<div class="page-head"><div><h1 class="page-title">{{ titulo }}</h1><p class="page-sub">Marque al menos una función. Asocie la cuenta de usuario para que el sistema reconozca sus permisos.</p></div></div>
+<form method="post" novalidate class="panel max-w-3xl">{% csrf_token %}
+  <div class="panel-body">{% include "parciales/form.html" %}</div>
+  <div class="panel-foot">
+    <a class="btn btn-quiet" href="{% url 'personal:lista' %}">Cancelar</a>
+    <button type="submit" class="btn btn-primary">Guardar empleado</button>
+  </div>
+</form>
+{% endblock %}
+{% block trazabilidad %}HU14 · RF18 · CU17 · S1{% endblock %}

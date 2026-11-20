@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titulo %}Recepcionar productos{% endblock %}
+{% block contenido %}
+<div class="page-head"><div><h1 class="page-title">Recepcionar productos</h1><p class="page-sub">Ingrese el número de la orden de pedido que llegó. Solo se acepta lo que la orden pidió.</p></div></div>
+<form method="get" novalidate class="panel max-w-lg">
+  <div class="panel-body">{% include "parciales/form.html" with una_columna=True %}</div>
+  <div class="panel-foot"><button type="submit" class="btn btn-primary">Buscar orden<i class="bi bi-chevron-right"></i></button></div>
+</form>
+{% endblock %}
+{% block trazabilidad %}HU18 · RF24, RF25 · CU11 · S4{% endblock %}

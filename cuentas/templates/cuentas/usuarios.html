@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titulo %}Usuarios{% endblock %}
+{% block contenido %}
+<div class="page-head">
+  <div><h1 class="page-title">Usuarios</h1><p class="page-sub">Cuentas del personal y de los clientes. Cada perfil ve solo sus módulos.</p></div>
+  <div class="flex flex-wrap gap-2"><a class="btn btn-primary" href="{% url 'cuentas:nuevo_usuario' %}"><i class="bi bi-person-plus"></i>Nueva cuenta</a></div>
+</div>
+<div class="panel">
+  <form method="get" class="panel-bar flex gap-2 flex-wrap">
+    <select name="perfil" class="select w-64" aria-label="Filtrar por perfil">
+      <option value="">Todos los perfiles</option>
+      {% for valor, etiqueta in perfiles %}<option value="{{ valor }}" {% if valor == perfil %}selected{% endif %}>{{ etiqueta }}</option>{% endfor %}
+    </select>
+    <button class="btn btn-quiet"><i class="bi bi-funnel"></i>Filtrar</button>
+  </form>
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>Usuario</th><th>Perfil</th><th>Estado</th><th></th></tr></thead>
+    <tbody>
+    {% for u in page_obj %}
+      <tr>
+        <td><span class="cell-main">{{ u.get_full_name|default:u.username }}</span><span class="cell-sub">{{ u.username }}{% if u.email %} · {{ u.email }}{% endif %}</span></td>
+        <td>{{ u.get_perfil_display }}</td>
+        <td>{% if u.esta_bloqueado %}<span class="badge badge-soft badge-error">Bloqueada</span>{% elif u.is_active %}<span class="badge badge-soft badge-success">Activa</span>{% else %}<span class="badge badge-soft badge-ghost">Inactiva</span>{% endif %}</td>
+        <td class="cell-actions">
+          <a class="btn btn-sm btn-quiet" href="{% url 'cuentas:editar_usuario' u.pk %}"><i class="bi bi-pencil"></i>Editar</a>
+          {% if u.is_active and u != user %}<a class="btn btn-sm btn-danger-quiet" href="{% url 'cuentas:desactivar_usuario' u.pk %}">Desactivar</a>{% endif %}
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="4" class="empty"><i class="bi bi-people"></i>No hay cuentas con ese filtro.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "parciales/paginacion.html" %}
+</div>
+{% endblock %}
+{% block trazabilidad %}HU02 · RF02, RF03 · RNF06, RNF07 · CU02 · S1{% endblock %}

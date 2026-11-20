@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block titulo %}Agenda{% endblock %}
+{% block contenido %}
+<div class="page-head">
+  <div><h1 class="page-title">Agenda</h1><p class="page-sub">{% if fecha %}Reservas del {{ fecha|date:"l j \d\e F" }}.{% else %}Reservas vigentes de hoy y los próximos días.{% endif %}</p></div>
+  <div class="flex flex-wrap gap-2"><a class="btn btn-primary" href="{% url 'agenda:nueva' %}"><i class="bi bi-calendar-plus"></i>Reservar en el local</a></div>
+</div>
+<div class="panel">
+  <form method="get" class="panel-bar flex gap-2 flex-wrap items-center">
+    <input type="date" name="fecha" value="{{ fecha|date:'Y-m-d' }}" class="input w-48" aria-label="Fecha">
+    <button class="btn btn-quiet">Ver día</button>
+    {% if fecha %}<a class="btn btn-ghost" href="{% url 'agenda:lista' %}">Próximos días</a>{% endif %}
+  </form>
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>Fecha y hora</th><th>Cliente</th><th>Servicio</th><th>Canal</th><th>Estado</th><th></th></tr></thead>
+    <tbody>
+    {% for r in page_obj %}
+      {% ifchanged r.fecha %}<tr><td colspan="6" class="bg-base-200/60 py-2 text-xs font-semibold capitalize text-base-content/70">{{ r.fecha|date:"l j \d\e F" }}{% if r.fecha == hoy %} · hoy{% endif %}</td></tr>{% endifchanged %}
+      <tr>
+        <td class="whitespace-nowrap"><span class="cell-main">{{ r.hora_inicio|time:"H:i" }}</span><span class="cell-sub">N° {{ r.numero }}</span></td>
+        <td>{{ r.cliente.nombre_completo }}</td><td>{{ r.servicio.nombre }}</td>
+        <td><span class="badge badge-outline badge-sm font-medium">{% if r.canal == "WEB" %}<i class="bi bi-globe2"></i> Internet{% else %}<i class="bi bi-shop"></i> Local{% endif %}</span></td>
+        <td>{% include "reservas/_estado_reserva.html" %}</td>
+        <td class="cell-actions">{% if r.modificable %}
+          <a class="btn btn-sm btn-quiet" href="{% url 'agenda:cambiar' r.numero %}">Cambiar</a>
+          <a class="btn btn-sm btn-danger-quiet" href="{% url 'agenda:anular' r.numero %}">Anular</a>{% endif %}</td>
+      </tr>
+    {% empty %}<tr><td colspan="6" class="empty"><i class="bi bi-calendar2-week"></i>No hay reservas.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "parciales/paginacion.html" %}
+</div>
+{% endblock %}
+{% block trazabilidad %}HU08, HU10 · RF10, RF13 · CU04 · S2{% endblock %}

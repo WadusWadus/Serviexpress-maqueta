@@ -1,0 +1,7 @@
+{% for m in messages %}
+  <div role="alert" class="alert alert-soft mb-5 {% if m.level == 25 %}alert-success{% elif m.level == 40 %}alert-error{% elif m.level == 30 %}alert-warning{% else %}alert-info{% endif %}">
+    <i class="bi {% if m.level == 25 %}bi-check-circle{% elif m.level == 40 %}bi-x-circle{% elif m.level == 30 %}bi-exclamation-triangle{% else %}bi-info-circle{% endif %} text-lg"></i>
+    <span class="font-medium">{{ m }}</span>
+    <button type="button" class="btn btn-ghost btn-xs btn-square" data-cerrar-aviso aria-label="Cerrar"><i class="bi bi-x-lg"></i></button>
+  </div>
+{% endfor %}

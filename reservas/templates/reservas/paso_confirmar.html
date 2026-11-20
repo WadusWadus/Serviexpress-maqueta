@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Reservar hora · confirmar{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% url ns|add:':paso_fecha' %}?fecha={{ fecha|date:'Y-m-d' }}"><i class="bi bi-arrow-left"></i>Cambiar fecha u hora</a>
+<div class="page-head"><div><h1 class="page-title">{% if cambiar %}Confirme el cambio{% else %}Confirme su reserva{% endif %}</h1><p class="page-sub">Revise los datos antes de confirmar.</p></div></div>
+{% if not cambiar %}{% include "reservas/_pasos.html" %}{% endif %}
+<section class="panel max-w-xl overflow-hidden">
+  <div class="relative overflow-hidden bg-carbon px-7 py-7 text-white">
+    <div class="pointer-events-none absolute -right-20 -top-24 size-64 rounded-full bg-violeta/30 blur-3xl"></div>
+    <p class="relative text-sm font-medium text-white/60">{{ servicio.nombre }}</p>
+    <p class="relative mt-2 text-3xl font-semibold capitalize tracking-tight">{{ fecha|date:"l j \d\e F" }}</p>
+    <p class="relative mt-1 text-xl font-medium text-violeta-claro">{{ hora|time:"H:i" }} hrs.</p>
+  </div>
+  <dl class="facts panel-body" id="resumen-reserva">
+    <div><dt>Cliente</dt><dd>{{ cliente.nombre_completo }}</dd></div>
+    <div><dt>Servicio</dt><dd>{{ servicio.nombre }}</dd></div>
+    <div><dt>Precio</dt><dd class="tabular">{{ servicio.precio|pesos }}</dd></div>
+    {% if cambiar %}<div><dt>Hora anterior</dt><dd>{{ cambiar.fecha|date:"d-m-Y" }} {{ cambiar.hora_inicio|time:"H:i" }} <span class="font-normal text-base-content/55">(quedará libre)</span></dd></div>{% endif %}
+  </dl>
+  <form method="post" class="panel-foot">{% csrf_token %}
+    <a class="btn btn-quiet" href="{% url ns|add:':paso_fecha' %}?fecha={{ fecha|date:'Y-m-d' }}">Volver</a>
+    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i>{% if cambiar %}Confirmar cambio{% else %}Confirmar reserva{% endif %}</button>
+  </form>
+</section>
+{% endblock %}
+{% block trazabilidad %}{% if cambiar %}HU10 · RF13{% else %}HU08 · RF10, RF11 · RNF18, RNF19{% endif %} · CU04 · S2{% endblock %}

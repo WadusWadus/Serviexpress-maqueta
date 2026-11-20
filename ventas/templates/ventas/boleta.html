@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Boleta N° {{ boleta.numero }}{% endblock %}
+{% block contenido %}
+<div class="no-print">
+  <a class="back-link" href="{% url 'ventas:boletas' %}"><i class="bi bi-arrow-left"></i>Boletas</a>
+  <div class="page-head">
+    <div><h1 class="page-title">Boleta N° {{ boleta.numero }}</h1>
+      <p class="page-sub flex items-center gap-2">{% include "ventas/_estado_boleta.html" with b=boleta %}{{ boleta.cliente.nombre_completo }} · {{ boleta.total|pesos }}</p></div>
+    <div class="flex flex-wrap gap-2">
+      <button type="button" class="btn btn-quiet" onclick="window.print()"><i class="bi bi-printer"></i>Imprimir</button>
+      {% if not boleta.anulada %}
+        <a class="btn btn-quiet" href="{% url 'ventas:boleta_modificar' boleta.numero %}"><i class="bi bi-pencil"></i>Modificar</a>
+        <a class="btn btn-danger-quiet" href="{% url 'ventas:boleta_anular' boleta.numero %}"><i class="bi bi-x-circle"></i>Anular</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<div class="grid gap-6 xl:grid-cols-12">
+  <article class="doc xl:col-span-8">
+    {% with fecha=boleta.fecha_emision|date:"d-m-Y H:i" %}{% include "ventas/_cabecera_documento.html" with tipo_documento="Boleta de servicios" numero_documento=boleta.numero fecha_documento=fecha %}{% endwith %}
+    <dl class="facts mb-8">
+      <div><dt>Cliente</dt><dd>{{ boleta.cliente.nombre_completo }}</dd></div>
+      <div><dt>RUT</dt><dd class="tabular">{{ boleta.cliente.rut }}</dd></div>
+      <div><dt>Forma de pago</dt><dd>{% if boleta.fiada %}Fiado{% else %}Contado{% endif %}</dd></div>
+    </dl>
+    <table class="table" id="lineas-boleta">
+      <thead><tr class="border-base-300 text-xs text-base-content/55"><th class="px-0">Descripción</th><th class="px-0 text-right">Monto</th></tr></thead>
+      <tbody>{% for l in lineas %}<tr class="border-base-300"><td class="px-0">{{ l.descripcion }}</td><td class="px-0 text-right tabular">{{ l.monto|pesos }}</td></tr>{% endfor %}</tbody>
+    </table>
+    <div class="mt-4 flex flex-wrap items-end justify-between gap-4">
+      <div>{% if boleta.anulada %}<span class="stamp">ANULADA</span>{% endif %}</div>
+      <div class="w-full max-w-xs"><div class="doc-total border-t-2 border-carbon pt-3 text-lg font-semibold"><span>Total</span><span class="tabular">{{ boleta.total|pesos }}</span></div></div>
+    </div>
+    {% if boleta.anulada %}
+      <div role="alert" class="alert alert-soft alert-error mt-6"><i class="bi bi-x-circle text-lg"></i>
+        <div><p class="font-medium">Anulada: {{ boleta.motivo_anulacion }}</p><p class="text-xs opacity-80">Por {{ boleta.anulada_por.get_full_name|default:boleta.anulada_por.username }} el {{ boleta.anulada_en|date:"d-m-Y H:i" }}</p></div></div>
+    {% endif %}
+    {% if boleta.observacion %}<p class="mt-5 text-sm"><span class="font-medium">Observación:</span> {{ boleta.observacion }}</p>{% endif %}
+    <p class="mt-8 text-xs text-base-content/45">Emitida por {{ boleta.emitida_por.get_full_name|default:boleta.emitida_por.username }}. Comprobante interno del taller; no reemplaza la boleta electrónica del SII.{% if demo %} (Pregunta V02.){% endif %}</p>
+  </article>
+  <div class="no-print xl:col-span-4">{% include "ventas/_historial.html" %}</div>
+</div>
+{% endblock %}
+{% block trazabilidad %}HU19, HU20 · RF26–RF28 · RNF08, RNF09 · CU12 · S3{% endblock %}

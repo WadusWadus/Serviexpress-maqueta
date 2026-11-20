@@ -1,0 +1,18 @@
+{% load sx %}
+<section class="panel">
+  <div class="panel-head"><h2 class="panel-title">Historial</h2></div>
+  <ul class="timeline-simple panel-body" id="historial-boleta">
+    {% for h in historial %}
+      <li>
+        <p class="text-sm font-medium">{{ h.get_operacion_display }} <span class="font-normal text-base-content/55">por {{ h.usuario.username|default:"—" }}</span></p>
+        <p class="text-xs text-base-content/45 tabular">{{ h.fecha_hora|date:"d-m-Y H:i" }}</p>
+        <div class="mt-1.5 text-sm text-base-content/75">
+          {% if h.detalle.cambios %}{% for campo, valores in h.detalle.cambios.items %}<p>{{ campo|capfirst }}: <s class="text-base-content/45">{{ valores.anterior|default:"(vacío)" }}</s> → {{ valores.nuevo|default:"(vacío)" }}</p>{% endfor %}
+          {% elif h.detalle.motivo %}Motivo: {{ h.detalle.motivo }}
+          {% else %}Total {{ h.detalle.total|pesos }}{% endif %}
+        </div>
+      </li>
+    {% empty %}<li class="text-sm text-base-content/55">Sin registros.</li>
+    {% endfor %}
+  </ul>
+</section>

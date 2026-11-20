@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Factura N° {{ factura.numero }}{% endblock %}
+{% block contenido %}
+<div class="no-print">
+  <a class="back-link" href="{% url 'ventas:facturas' %}"><i class="bi bi-arrow-left"></i>Facturas</a>
+  <div class="page-head">
+    <div><h1 class="page-title">Factura N° {{ factura.numero }}</h1><p class="page-sub">{{ factura.razon_social }} · {{ factura.total|pesos }}</p></div>
+    <div class="flex flex-wrap gap-2"><button type="button" class="btn btn-quiet" onclick="window.print()"><i class="bi bi-printer"></i>Imprimir</button></div>
+  </div>
+</div>
+<article class="doc max-w-4xl">
+  {% with fecha=factura.fecha|date:"d-m-Y" %}{% include "ventas/_cabecera_documento.html" with tipo_documento="Factura de servicios" numero_documento=factura.numero fecha_documento=fecha %}{% endwith %}
+  <dl class="facts mb-8">
+    <div><dt>Razón social</dt><dd>{{ factura.razon_social }}</dd></div>
+    <div><dt>RUT</dt><dd class="tabular">{{ factura.rut_facturacion }}</dd></div>
+    <div><dt>Giro</dt><dd>{{ factura.giro }}</dd></div>
+    <div><dt>Dirección</dt><dd>{{ factura.direccion_facturacion }}</dd></div>
+  </dl>
+  <table class="table" id="lineas-factura">
+    <thead><tr class="border-base-300 text-xs text-base-content/55"><th class="px-0">Descripción</th><th class="px-0 text-right">Monto</th></tr></thead>
+    <tbody>{% for l in lineas %}<tr class="border-base-300"><td class="px-0">{{ l.descripcion }}</td><td class="px-0 text-right tabular">{{ l.monto|pesos }}</td></tr>{% endfor %}</tbody>
+  </table>
+  <div class="ml-auto mt-4 w-full max-w-xs text-sm">
+    <div class="doc-total text-base-content/65"><span>Neto</span><span class="tabular">{{ factura.neto|pesos }}</span></div>
+    <div class="doc-total text-base-content/65"><span>IVA 19%</span><span class="tabular">{{ factura.iva|pesos }}</span></div>
+    <div class="doc-total mt-1 border-t-2 border-carbon pt-3 text-lg font-semibold"><span>Total</span><span class="tabular">{{ factura.total|pesos }}</span></div>
+  </div>
+  <p class="mt-8 text-xs text-base-content/45">Cliente: {{ factura.cliente.nombre_completo }} (RUT {{ factura.cliente.rut }}). Precios con IVA incluido. Comprobante interno del taller; no reemplaza la factura electrónica del SII.{% if demo %} (Pregunta V02.){% endif %}</p>
+</article>
+{% endblock %}
+{% block trazabilidad %}HU21 · RF29 · RNF08 · CU13 · S3{% endblock %}

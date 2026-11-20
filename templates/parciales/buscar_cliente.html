@@ -1,0 +1,27 @@
+{% comment %}Búsqueda de cliente. Con metodo="post" elige por formulario (agenda); si no, enlaza a url_siguiente?cliente=.{% endcomment %}
+<section class="panel max-w-2xl">
+  {% include "parciales/buscador.html" with placeholder="RUT, nombre o apellido" %}
+  {% if q %}
+    {% if metodo == "post" %}<form method="post">{% csrf_token %}{% endif %}
+    <ul class="rows">
+      {% for c in resultados %}
+        <li class="p-0">
+          {% if metodo == "post" %}
+            <button type="submit" name="cliente" value="{{ c.pk }}" class="flex w-full items-center gap-4 px-6 py-3.5 text-left hover:bg-base-200/50">
+          {% else %}
+            <a href="{% url url_siguiente %}?cliente={{ c.pk }}" class="flex w-full items-center gap-4 px-6 py-3.5 hover:bg-base-200/50">
+          {% endif %}
+              <span class="inline-grid size-9 shrink-0 place-items-center rounded-full bg-violeta-tinte text-xs font-semibold text-violeta">{{ c.nombres|slice:":1"|upper }}{{ c.apellidos|slice:":1"|upper }}</span>
+              <span class="row-main"><span class="row-title">{{ c.nombre_completo }}</span><span class="row-sub">RUT {{ c.rut }}</span></span>
+              <i class="bi bi-chevron-right text-base-content/40"></i>
+          {% if metodo == "post" %}</button>{% else %}</a>{% endif %}
+        </li>
+      {% empty %}
+        <li class="empty block border-0"><i class="bi bi-person-x"></i>No se encontró el cliente.{% if metodo == "post" %} <a class="panel-link" href="{% url 'clientes:nuevo' %}">Registrar ficha nueva</a>{% endif %}</li>
+      {% endfor %}
+    </ul>
+    {% if metodo == "post" %}</form>{% endif %}
+  {% else %}
+    <p class="px-6 py-5 text-sm text-base-content/55">Escriba el RUT o el nombre y presione «Buscar».</p>
+  {% endif %}
+</section>

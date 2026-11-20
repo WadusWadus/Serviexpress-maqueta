@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}Saldo de {{ cliente.nombre_completo }}{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% url 'clientes:ficha' cliente.pk %}"><i class="bi bi-arrow-left"></i>{{ cliente.nombre_completo }}</a>
+<div class="page-head"><div><h1 class="page-title">Saldo de fiado</h1><p class="page-sub">{{ cliente.nombre_completo }} · RUT {{ cliente.rut }} · {% if cliente.fiado_habilitado %}habilitado para fiado{% else %}no habilitado{% endif %}</p></div></div>
+<div class="kpi mb-6 max-w-xs"><div class="kpi-top"><span class="kpi-label">Saldo pendiente</span><span class="kpi-icon"><i class="bi bi-wallet2"></i></span></div>
+  <p class="kpi-value" id="saldo">{{ cliente.saldo_fiado|pesos }}</p></div>
+<section class="panel">
+  <div class="panel-head"><h2 class="panel-title">Movimientos</h2></div>
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>Fecha</th><th>Boleta</th><th>Detalle</th><th class="text-right">Monto</th></tr></thead>
+    <tbody>
+    {% for m in movimientos %}
+      <tr><td class="whitespace-nowrap tabular">{{ m.fecha|date:"d-m-Y H:i" }}</td><td><a class="font-medium text-primary" href="{% url 'ventas:boleta' m.boleta.numero %}">N° {{ m.boleta.numero }}</a></td><td>{{ m.descripcion }}</td>
+        <td class="text-right font-medium tabular {% if m.monto < 0 %}text-success{% endif %}">{{ m.monto|pesos }}</td></tr>
+    {% empty %}<tr><td colspan="4" class="empty"><i class="bi bi-wallet2"></i>Sin movimientos de fiado.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</section>
+{% endblock %}
+{% block trazabilidad %}HU07 · RF08, RF09 · CU14 · S5{% endblock %}

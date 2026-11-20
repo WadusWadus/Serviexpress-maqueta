@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load sx %}
+{% block titulo %}{{ cliente.nombre_completo }}{% endblock %}
+{% block contenido %}
+<a class="back-link" href="{% url 'clientes:lista' %}"><i class="bi bi-arrow-left"></i>Clientes</a>
+<div class="page-head">
+  <div class="flex items-center gap-4">
+    <span class="inline-grid size-14 shrink-0 place-items-center rounded-full bg-violeta-tinte text-lg font-semibold text-violeta">{{ cliente.nombres|slice:":1"|upper }}{{ cliente.apellidos|slice:":1"|upper }}</span>
+    <div><h1 class="page-title">{{ cliente.nombre_completo }}</h1><p class="page-sub mt-1">RUT {{ cliente.rut }} · cliente desde {{ cliente.fecha_registro|date:"F \d\e Y" }}</p></div>
+  </div>
+  <div class="flex flex-wrap gap-2">
+    <a class="btn btn-quiet" href="{% url 'ventas:boleta_nueva' %}?cliente={{ cliente.pk }}"><i class="bi bi-receipt"></i>Emitir boleta</a>
+    <a class="btn btn-primary" href="{% url 'clientes:editar' cliente.pk %}"><i class="bi bi-pencil"></i>Modificar ficha</a>
+  </div>
+</div>
+<div class="grid gap-4 lg:grid-cols-12">
+  <section class="panel lg:col-span-8">
+    <div class="panel-head"><h2 class="panel-title">Datos de contacto</h2></div>
+    <dl class="facts panel-body" id="datos-ficha">
+      <div><dt>Teléfono</dt><dd>{{ cliente.telefono|default:"—" }}</dd></div>
+      <div><dt>Correo</dt><dd>{{ cliente.email|default:"—" }}</dd></div>
+      <div><dt>Dirección</dt><dd>{{ cliente.direccion|default:"—" }}</dd></div>
+      <div><dt>Usuario web</dt><dd>{{ cliente.usuario.username }}{% if not cliente.usuario.is_active %} <span class="badge badge-soft badge-ghost">inactiva</span>{% endif %}</dd></div>
+    </dl>
+  </section>
+  <section class="panel lg:col-span-4">
+    <div class="panel-head"><h2 class="panel-title">Fiado</h2>{% if cliente.fiado_habilitado %}<span class="badge badge-soft badge-primary">Habilitado</span>{% else %}<span class="badge badge-soft badge-ghost">No habilitado</span>{% endif %}</div>
+    <div class="panel-body" id="estado-fiado">
+      {% if cliente.fiado_habilitado %}
+        <span class="sr-only">Habilitado para fiado</span>
+        <p class="kpi-label">Saldo pendiente</p>
+        <p class="kpi-value mt-2"><a class="hover:text-primary" href="{% url 'clientes:saldo' cliente.pk %}">{{ cliente.saldo_fiado|pesos }}</a></p>
+      {% else %}
+        <p class="text-sm text-base-content/60">Este cliente paga al contado.</p>
+      {% endif %}
+      {% if user.perfil == "ADMIN" %}
+        <form method="post" action="{% url 'clientes:fiado_cambiar' cliente.pk %}" class="mt-5">{% csrf_token %}
+          <input type="hidden" name="volver" value="{% url 'clientes:ficha' cliente.pk %}">
+          <button class="btn btn-quiet btn-sm w-full">{% if cliente.fiado_habilitado %}Deshabilitar fiado{% else %}Habilitar fiado{% endif %}</button>
+        </form>
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}
+{% block trazabilidad %}HU05, HU06 · RF06, RF07 · CU03 · S1{% endblock %}

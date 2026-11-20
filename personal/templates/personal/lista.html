@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}Empleados{% endblock %}
+{% block contenido %}
+<div class="page-head">
+  <div><h1 class="page-title">Empleados</h1><p class="page-sub">Personal del taller y sus funciones: quién puede pedir productos y quién ejecuta servicios.</p></div>
+  <div class="flex flex-wrap gap-2"><a class="btn btn-primary" href="{% url 'personal:nuevo' %}"><i class="bi bi-person-plus"></i>Nuevo empleado</a></div>
+</div>
+<div class="panel">
+  <div class="overflow-x-auto">
+  <table class="table data-table">
+    <thead><tr><th>Empleado</th><th>Cuenta</th><th>Funciones</th><th>Estado</th><th></th></tr></thead>
+    <tbody>
+    {% for e in page_obj %}
+      <tr>
+        <td><span class="cell-main">{{ e.nombre_completo }}</span><span class="cell-sub">RUT {{ e.rut }}{% if e.telefono %} · {{ e.telefono }}{% endif %}</span></td>
+        <td>{{ e.usuario.username|default:"Sin cuenta" }}</td>
+        <td>{% if e.solicita_productos %}<span class="badge badge-soft badge-info">Solicita productos</span>{% endif %}
+            {% if e.ejecuta_servicios %}<span class="badge badge-soft badge-primary">Ejecuta servicios</span>{% endif %}</td>
+        <td>{% if e.activo %}<span class="badge badge-soft badge-success">Activo</span>{% else %}<span class="badge badge-soft badge-ghost">Inactivo</span>{% endif %}</td>
+        <td class="cell-actions"><a class="btn btn-sm btn-quiet" href="{% url 'personal:editar' e.pk %}"><i class="bi bi-pencil"></i>Editar</a></td>
+      </tr>
+    {% empty %}<tr><td colspan="5" class="empty"><i class="bi bi-person-badge"></i>No hay empleados registrados.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  {% include "parciales/paginacion.html" %}
+</div>
+{% endblock %}
+{% block trazabilidad %}HU14 · RF18 · CU17 · S1{% endblock %}
