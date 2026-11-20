@@ -1,0 +1,19 @@
+# /etc/systemd/system/serviexpress.service · gunicorn de SERVIEXPRESS (MAQUETA-SPEC 12.6)
+# Sigue el mismo patrón que mwt-cotizaciones: usuario wadus, grupo www-data y socket Unix
+# (el puerto 8000 lo usa el portafolio).
+[Unit]
+Description=SERVIEXPRESS maqueta (gunicorn)
+After=network.target
+
+[Service]
+User=wadus
+Group=www-data
+WorkingDirectory=/home/wadus/serviexpress
+EnvironmentFile=/home/wadus/serviexpress/.env
+ExecStart=/home/wadus/serviexpress/venv/bin/gunicorn --workers 2 --timeout 60 --bind unix:/run/serviexpress/gunicorn.sock config.wsgi:application
+RuntimeDirectory=serviexpress
+RuntimeDirectoryMode=0775
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

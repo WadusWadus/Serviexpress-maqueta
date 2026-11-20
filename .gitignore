@@ -13,4 +13,4 @@ CLAUDE.md
 *.csv
 *.sqlite3
 PRUEBAS-MANUALES.md
-.idea/
+.idea/respaldos/
