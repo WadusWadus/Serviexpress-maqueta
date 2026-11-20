@@ -36,3 +36,16 @@ class BaseComunTests(TestCase):
     def test_cargar_demo_corre_dos_veces(self):
         call_command("cargar_demo", verbosity=0, stdout=open("/dev/null", "w"))
         call_command("cargar_demo", verbosity=0, stdout=open("/dev/null", "w"))
+
+
+
+class IngresoSinCredencialesTests(TestCase):
+    """La pantalla de ingreso no muestra usuarios ni contraseñas (el sitio está publicado)."""
+
+    def test_ingreso_no_muestra_credenciales(self):
+        from django.test import override_settings
+        from django.urls import reverse
+        with override_settings(DEMO=True):
+            respuesta = self.client.get(reverse("cuentas:ingresar"))
+        self.assertNotContains(respuesta, "Demo2026!")
+        self.assertNotContains(respuesta, "credenciales-demo")

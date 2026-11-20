@@ -165,7 +165,7 @@ Lo que **debe** quedar registrado: intentos de acceso denegados (S1), creación,
 
 ### 5.4 Plantilla base e interfaz
 
-`templates/base.html` (shell con menú lateral; la banda de aviso, el chip de trazabilidad y las credenciales demo solo se muestran con `DJANGO_DEMO=1`):
+`templates/base.html` (shell con menú lateral; la banda de aviso y el chip de trazabilidad solo se muestran con `DJANGO_DEMO=1`; las credenciales demo no se muestran nunca):
 - Barra superior con el nombre "SERVIEXPRESS", el menú **según el perfil** (solo muestra módulos permitidos), el usuario conectado y "Salir".
 - **Banda fija de aviso:** "Maqueta de demostración — datos ficticios".
 - Zona de mensajes (`django.contrib.messages`) con colores de Bootstrap.
@@ -219,7 +219,7 @@ Comando `python manage.py cargar_demo` (en `core/management/commands/`). Reglas:
 - **Fechas relativas a hoy** (`date.today() + timedelta(...)`), para que la demo funcione cualquier día.
 - Opción `--reset`: hace `flush` y vuelve a cargar todo.
 
-**Usuarios de demostración** (contraseña de todos: `Demo2026!`, mostrada en la pantalla de ingreso **solo** mientras `DJANGO_DEMO=1`):
+**Usuarios de demostración** (contraseña de todos: `Demo2026!`; no se muestra en la pantalla de ingreso, se entrega aparte):
 
 | Usuario | Perfil | Empleado | Para demostrar |
 |---|---|---|---|

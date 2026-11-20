@@ -33,8 +33,8 @@ if not SECRET_KEY:
 ALLOWED_HOSTS = _env_lista("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1" if DEBUG else "")
 CSRF_TRUSTED_ORIGINS = _env_lista("DJANGO_CSRF_TRUSTED_ORIGINS")
 
-# Modo presentación de curso (sección 6): muestra la banda de aviso, los chips de trazabilidad
-# HU/RF/CU y las credenciales demo en la pantalla de ingreso. Apagado, el sistema se ve como producto.
+# Modo presentación de curso (sección 6): muestra la banda de aviso y los chips de trazabilidad
+# HU/RF/CU. Apagado, el sistema se ve como producto. Las credenciales no se muestran en pantalla.
 DEMO = _env_bool("DJANGO_DEMO", "0")
 
 
