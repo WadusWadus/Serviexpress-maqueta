@@ -10,7 +10,7 @@ from django.shortcuts import render
 
 from .forms import CampoFecha, Formulario
 from .models import RegistroAuditoria, SeccionAyuda
-from .permisos import requiere_modulo
+from .permisos import modulos_visibles, requiere_modulo
 
 
 class FiltroAuditoriaForm(Formulario):
@@ -23,8 +23,16 @@ class FiltroAuditoriaForm(Formulario):
 
 @login_not_required
 def ayuda(request):
-    """HU03 · RF04 · Manual completo (público)."""
-    return render(request, "core/ayuda.html", {"secciones": SeccionAyuda.objects.all()})
+    """HU03 · RF04 · Manual (público), solo con las secciones de los módulos del perfil.
+
+    Sin sesión se muestra lo que puede hacer un futuro cliente: la sección general y la de reservas.
+    """
+    if request.user.is_authenticated:
+        modulos = modulos_visibles(request.user)
+    else:
+        modulos = {"reserva_web"}
+    secciones = SeccionAyuda.objects.filter(modulo__in={SeccionAyuda.GENERAL} | set(modulos))
+    return render(request, "core/ayuda.html", {"secciones": secciones})
 
 
 @login_not_required

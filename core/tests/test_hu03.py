@@ -29,7 +29,26 @@ class AyudaTests(TestCase):
         self.assertContains(respuesta, "no tiene una sección propia en el manual")
         self.assertContains(respuesta, reverse("core:ayuda"))
 
-    def test_manual_completo_es_publico(self):
+    def secciones_del_manual(self):
         respuesta = self.client.get(reverse("core:ayuda"))
         self.assertEqual(respuesta.status_code, 200)
-        self.assertContains(respuesta, "Boletas y facturas")
+        return {s.modulo for s in respuesta.context["secciones"]}
+
+    def test_manual_es_publico_y_sin_sesion_muestra_solo_general_y_reservas(self):
+        SeccionAyuda.objects.create(modulo="general", titulo="Manual general", contenido="Cómo usar el sistema.")
+        self.assertEqual(self.secciones_del_manual(), {"general", "reserva_web"})
+
+    def test_manual_muestra_solo_las_secciones_del_perfil(self):
+        for modulo, titulo in [("general", "Manual general"), ("atencion", "Atención"), ("auditoria", "Auditoría")]:
+            SeccionAyuda.objects.create(modulo=modulo, titulo=titulo, contenido="Pasos.")
+        # Secciones creadas en este test: general, clientes, reserva_web, ventas, atencion y auditoria.
+        casos = {
+            "MECANICO": {"general", "atencion"},
+            "CLIENTE": {"general", "reserva_web"},
+            "ADMINISTRATIVO": {"general", "clientes", "ventas"},
+            "ADMIN": {"general", "clientes", "ventas", "atencion", "auditoria"},
+        }
+        for perfil, esperado in casos.items():
+            with self.subTest(perfil=perfil):
+                self.client.force_login(crear_usuario(perfil.lower(), perfil))
+                self.assertEqual(self.secciones_del_manual(), esperado)
